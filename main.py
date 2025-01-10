@@ -27,7 +27,24 @@ def setup_pygame_window(width=500, height=500, background_color=(243, 207, 198))
 
     return screen
 
+def create_game_loop():
+    """
+    Creates the game loop.
+
+    """
+    running = True
+    while running:
+        # Handle events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # Update the display
+        pygame.display.flip()
+
+    pygame.quit()
+                
+
 if __name__ == '__main__':
     screen = setup_pygame_window()
-    pygame.display.flip()
-    pygame.quit()
+    create_game_loop()
