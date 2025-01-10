@@ -8,7 +8,7 @@ def setup_pygame_window(width=500, height=500, background_color=(243, 207, 198))
         width (int): Width of the window. Default is 500.
         height (int): Height of the window. Default is 500.
         background_color (tuple): RGB tuple for the background color. Default is (243, 207, 198).
-
+        
     Returns:
         pygame.Surface: The created Pygame screen.
     """
@@ -27,13 +27,16 @@ def setup_pygame_window(width=500, height=500, background_color=(243, 207, 198))
 
     return screen
 
-def create_game_loop():
+def create_game_loop(screen):
     """
-    Creates the game loop.
-
+    Runs the game loop, handling events and updating the display.
+    
+    Args:
+        screen (pygame.Surface): The Pygame screen where the game is rendered
     """
     # Set initial position and movement speed of the frog
     frog_x, frog_y = 250, 250
+    frog_width, frog_height = 30, 30
     frog_speed = 5
 
     # Dictionary to store movement states
@@ -73,18 +76,18 @@ def create_game_loop():
                     movement['up'] = False
 
         # Update frog position based on movement states
-        if movement['left']:
+        if movement['left'] and frog_x > 0:
             frog_x -= frog_speed
-        if movement['right']:
+        if movement['right'] and frog_x < screen.get_width() - frog_width: 
             frog_x += frog_speed
-        if movement['down']:
+        if movement['down'] and frog_y < screen.get_height() - frog_height:
             frog_y += frog_speed
-        if movement['up']:
+        if movement['up'] and frog_y > 0:
             frog_y -= frog_speed
         
         # Update the display (draw the frog at new position)
         screen.fill((243, 207, 198))  # clear screen with background color
-        pygame.draw.rect(screen, (0, 255, 0), (frog_x, frog_y, 30, 30))  # draw frog (green rectangle for now)
+        pygame.draw.rect(screen, (0, 255, 0), (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
         pygame.display.flip()
 
         # Limit the frame rate to 60 frames per second
@@ -94,4 +97,4 @@ def create_game_loop():
                 
 if __name__ == '__main__':
     screen = setup_pygame_window()
-    create_game_loop()
+    create_game_loop(screen)
