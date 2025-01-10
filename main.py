@@ -32,19 +32,66 @@ def create_game_loop():
     Creates the game loop.
 
     """
+    # Set initial position and movement speed of the frog
+    frog_x, frog_y = 250, 250
+    frog_speed = 5
+
+    # Dictionary to store movement states
+    movement = {
+        'left': False,
+        'right': False,
+        'down': False,
+        'up': False
+    }
+
+    # Set up a clock for a consistent frame rate
+    clock = pygame.time.Clock()
+    
     running = True
     while running:
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                running = False 
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    movement['left'] = True
+                if event.key == pygame.K_RIGHT:
+                    movement['right'] = True
+                if event.key == pygame.K_DOWN:
+                    movement['down'] = True
+                if event.key == pygame.K_UP:
+                    movement['up'] = True 
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    movement['left'] = False
+                if event.key == pygame.K_RIGHT:
+                    movement['right'] = False
+                if event.key == pygame.K_DOWN:
+                    movement['down'] = False
+                if event.key == pygame.K_UP:
+                    movement['up'] = False
 
-        # Update the display
+        # Update frog position based on movement states
+        if movement['left']:
+            frog_x -= frog_speed
+        if movement['right']:
+            frog_x += frog_speed
+        if movement['down']:
+            frog_y += frog_speed
+        if movement['up']:
+            frog_y -= frog_speed
+        
+        # Update the display (draw the frog at new position)
+        screen.fill((243, 207, 198))  # clear screen with background color
+        pygame.draw.rect(screen, (0, 255, 0), (frog_x, frog_y, 30, 30))  # draw frog (green rectangle for now)
         pygame.display.flip()
+
+        # Limit the frame rate to 60 frames per second
+        clock.tick(60)
 
     pygame.quit()
                 
-
 if __name__ == '__main__':
     screen = setup_pygame_window()
     create_game_loop()
