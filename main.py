@@ -1,4 +1,5 @@
 import pygame
+from fly import Fly
 
 def setup_pygame_screen(width=500, height=500, background_color=(243, 207, 198)):
     """
@@ -27,7 +28,7 @@ def setup_pygame_screen(width=500, height=500, background_color=(243, 207, 198))
 
     return screen
 
-def create_game_loop(screen):
+def create_game_loop(screen, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
     
@@ -36,6 +37,9 @@ def create_game_loop(screen):
     """
     # Original screen dimensions
     original_width, original_height = screen.get_width(), screen.get_height()
+
+    # List to store flies
+    flies = [Fly(original_width, original_height) for i in range(initial_fly_count)]
     
     # Set initial position and movement speed of the frog (using floats for precision)
     frog_x, frog_y = original_width / 2.0, original_height / 2.0
@@ -62,6 +66,11 @@ def create_game_loop(screen):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            # Generate a new fly when the timer event occurs
+            if event.type == FLY_GENERATE_EVENT:
+                flies.append(Fly(previous_width, previous_height))
+                
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
                 new_width = event.w
@@ -83,7 +92,7 @@ def create_game_loop(screen):
 
                 # Update the previous dimensions to the current ones
                 previous_width, previous_height = new_width, new_height
-    
+                
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     movement['left'] = True
@@ -92,7 +101,8 @@ def create_game_loop(screen):
                 if event.key == pygame.K_DOWN:
                     movement['down'] = True
                 if event.key == pygame.K_UP:
-                    movement['up'] = True 
+                    movement['up'] = True
+                    
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
                     movement['left'] = False
@@ -116,6 +126,12 @@ def create_game_loop(screen):
         # Update the display (draw the frog at new position)
         screen.fill((243, 207, 198))  # clear screen with background color
         pygame.draw.rect(screen, (0, 255, 0), (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
+
+        # Draw flies
+        for fly in flies:
+            fly.draw(screen)
+
+        # Refresh screen
         pygame.display.flip()
 
         # Limit the frame rate to 60 frames per second
@@ -125,4 +141,9 @@ def create_game_loop(screen):
                 
 if __name__ == '__main__':
     screen = setup_pygame_screen()
+    
+    # Fly generation timer event
+    FLY_GENERATE_EVENT = pygame.USEREVENT + 1
+    pygame.time.set_timer(FLY_GENERATE_EVENT, 2000) # Trigger every 5 seconds
+
     create_game_loop(screen)
