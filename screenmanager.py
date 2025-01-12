@@ -23,9 +23,30 @@ class ScreenManager:
     @property
     def height(self):
         """
-        Returns the Pygame screen height.
+        Returns the current screen height.
         """
         return self._height
+
+    @property
+    def previous_width(self):
+        """
+        Returns the previous screen width.
+        """
+        return self._previous_width
+
+    @property
+    def previous_height(self):
+        """
+        Returns the previous screen height.
+        """
+        return self._previous_height
+
+    @property
+    def background_color(self):
+        """
+        Returns the Pygame screen background color.
+        """
+        return self._background_color
 
     @property
     def screen(self):
