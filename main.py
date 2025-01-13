@@ -2,6 +2,11 @@ import pygame
 from fly import Fly
 from screen_manager import ScreenManager
 
+def draw_score(screen, score):
+    font = pygame.font.Font(None, 36)
+    score_text = font.render(f"Score: {score}", True, (0, 0, 0))  # Black color for the score
+    screen.blit(score_text, (10, 10))  # Display the score at position (10, 10)
+
 def check_collision(frog_x, frog_y, frog_width, frog_height, fly):
     """
     Checks if the frog and a fly are colliding.
@@ -122,6 +127,9 @@ def create_game_loop(screen_manager, initial_fly_count=5):
             else:
                 # Update the display (draw the fly at new position)
                 fly.draw(screen_manager.screen)
+
+        # Draw the score
+        draw_score(screen_manager.screen, score)
 
         # Refresh display
         pygame.display.flip()
