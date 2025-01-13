@@ -2,18 +2,38 @@ import random
 import pygame
 
 class Fly:
-    def __init__(self, screen_width, screen_height):
+    def __init__(self, screen_width, screen_height, width=10, height=10, background_color=(0, 0, 0)):
+        """
+        Initialize the fly with default size and color and random position.
+        """
         # Dimensions of the fly
-        self.width = 10
-        self.height = 10
+        self._width = width
+        self._height = height
 
         # Random initial position
-        self.x = random.randint(0, screen_width - self.width)
-        self.y = random.randint(0, screen_width - self.height)
+        self._x = random.randint(0, int(screen_width) - int(self._width))
+        self._y = random.randint(0, int(screen_width) - int(self._height))
 
-        self.color = (0, 0, 0) # Black color for the fly
+        self._color = background_color # Black color for the fly
+
+    def resize(self, width_scale, height_scale):
+        """
+        Resizes the object based on the scaling factors.
+        """
+        self._width *= width_scale
+        self._height *= height_scale
+
+    def reposition(self, width_scale, height_scale):
+        """
+        Repositions the object to maintain its relative position on the screen.
+        """
+        self._x *= width_scale
+        self._y *= height_scale
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+        """
+        Draws the fly (used after resizing and reposition from screen resizing).
+        """
+        pygame.draw.rect(screen, self._color, (self._x, self._y, self._width, self._height))
 
         

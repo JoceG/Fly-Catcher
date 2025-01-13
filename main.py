@@ -12,10 +12,14 @@ def create_game_loop(screen_manager, initial_fly_count=5):
     # List to store flies
     flies = [Fly(screen_manager.width, screen_manager.height) for i in range(initial_fly_count)]
     
-    # Set initial position and movement speed of the frog (using floats for precision)
+    # Set initial position, size, movement speed, and color of the frog (using floats for precision)
     frog_x, frog_y = screen_manager.width / 2.0, screen_manager.height / 2.0
     frog_width, frog_height = 30.0, 30.0
     frog_speed = 5.0
+    frog_color = (0, 255, 0)
+
+    # Set initial size of the flies (using floats for precision)
+    fly_width, fly_height = 10.0, 10.0
 
     # Dictionary to store movement states
     movement = {
@@ -37,7 +41,7 @@ def create_game_loop(screen_manager, initial_fly_count=5):
 
             # Generate a new fly when the timer event occurs
             if event.type == FLY_GENERATE_EVENT:
-                flies.append(Fly(screen_manager.width, screen_manager.height))
+                flies.append(Fly(screen_manager.width, screen_manager.height, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
@@ -55,6 +59,15 @@ def create_game_loop(screen_manager, initial_fly_count=5):
                 frog_y *= height_scale
                 frog_width *= width_scale
                 frog_height *= height_scale
+
+                # Update the flies' size relative to the new screen size
+                fly_width *= width_scale
+                fly_height *= height_scale
+
+                # Update each fly's position and size relative to the new screen size
+                for fly in flies:
+                    fly.resize(width_scale, height_scale)
+                    fly.reposition(width_scale, height_scale)
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -88,10 +101,11 @@ def create_game_loop(screen_manager, initial_fly_count=5):
         
         # Update the display (draw the frog at new position)
         screen_manager.clear() # clear screen with the background color
-        pygame.draw.rect(screen_manager.screen, (0, 255, 0), (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
+        pygame.draw.rect(screen_manager.screen, frog_color, (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
 
         # Draw flies
         for fly in flies:
+            # Update the display (draw the flies at new position)
             fly.draw(screen_manager.screen)
 
         # Refresh display
