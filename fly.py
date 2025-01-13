@@ -16,6 +16,9 @@ class Fly:
 
         self._color = background_color # Black color for the fly
 
+        self._screen_width = screen_width  # Store screen width
+        self._screen_height = screen_height  # Store screen height
+
     @property
     def width(self):
         """
@@ -31,18 +34,36 @@ class Fly:
         return self._height
 
     @property
-    def x_pos(self):
+    def x(self):
         """
         Returns the fly's x position.
         """
         return self._x
 
+    @x.setter
+    def x(self, value):
+        # Ensure x is within bounds (cannot exceed screen width minus fly width)
+        if value < 0:
+            raise ValueError("x position cannot be negative.")
+        if value > self._screen_width - self._width:
+            raise ValueError(f"x position cannot be greater than screen width ({self._screen_width - self._width}).")
+        self._x = value
+
     @property
-    def y_pos(self):
+    def y(self):
         """
         Returns the fly's y position.
         """
         return self._y
+
+    @y.setter
+    def y(self, value):
+        # Ensure y is within bounds (cannot exceed screen height minus fly height)
+        if value < 0:
+            raise ValueError("y position cannot be negative.")
+        if value > self._screen_height - self._height:
+            raise ValueError(f"y position cannot be greater than screen height ({self._screen_height - self._height}).")
+        self._y = value
 
     @property
     def color(self):

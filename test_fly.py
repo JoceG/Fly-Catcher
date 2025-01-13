@@ -14,8 +14,8 @@ def test_initialization(fly):
     """
     assert fly.width == 10
     assert fly.height == 10
-    assert 0 <= fly._x <= 500 - fly.width
-    assert 0 <= fly._y <= 500 - fly.height
+    assert 0 <= fly.x <= 500 - fly.width
+    assert 0 <= fly.y <= 500 - fly.height
     assert fly._color == (0, 0, 0)
 
 def test_resize(fly):
@@ -34,20 +34,20 @@ def test_reposition(fly):
     """
     Test that the Fly repositions correctly based on scaling factors.
     """
-    initial_x = fly.x_pos
-    initial_y = fly.y_pos
+    initial_x = fly.x
+    initial_y = fly.y
     width_scale = 2.0
     height_scale = 1.5
     fly.reposition(width_scale, height_scale)
-    assert fly.x_pos == initial_x * width_scale
-    assert fly.y_pos == initial_y * height_scale
+    assert fly.x == initial_x * width_scale
+    assert fly.y == initial_y * height_scale
 
 def test_resize_and_reposition(fly):
     """
     Test that resizing and repositioning work together as expected.
     """
-    initial_x = fly.x_pos
-    initial_y = fly.y_pos
+    initial_x = fly.x
+    initial_y = fly.y
     width_scale = 2.0
     height_scale = 1.5
 
@@ -58,5 +58,5 @@ def test_resize_and_reposition(fly):
     # Validate changes
     assert fly.width == 20
     assert fly.height == 15
-    assert fly.x_pos == initial_x * width_scale
-    assert fly.y_pos == initial_y * height_scale
+    assert fly.x == initial_x * width_scale
+    assert fly.y == initial_y * height_scale
