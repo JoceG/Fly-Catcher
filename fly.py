@@ -31,14 +31,14 @@ class Fly:
         return self._height
 
     @property
-    def x_pos(self):
+    def x(self):
         """
         Returns the fly's x position.
         """
         return self._x
 
     @property
-    def y_pos(self):
+    def y(self):
         """
         Returns the fly's y position.
         """

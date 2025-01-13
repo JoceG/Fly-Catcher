@@ -2,6 +2,14 @@ import pygame
 from fly import Fly
 from screenmanager import ScreenManager
 
+def check_collision(frog_x, frog_y, frog_width, frog_height, fly):
+    """
+    Checks if the frog and a fly are colliding.
+    """
+    frog_rect = pygame.Rect(frog_x, frog_y, frog_width, frog_height)
+    fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
+    return frog_rect.colliderect(fly_rect)
+
 def create_game_loop(screen_manager, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
@@ -9,6 +17,9 @@ def create_game_loop(screen_manager, initial_fly_count=5):
     Args:
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
+    # Number of flies the frog has eaten
+    score = 0
+    
     # List to store flies
     flies = [Fly(screen_manager.width, screen_manager.height) for i in range(initial_fly_count)]
     
@@ -105,8 +116,12 @@ def create_game_loop(screen_manager, initial_fly_count=5):
 
         # Draw flies
         for fly in flies:
-            # Update the display (draw the flies at new position)
-            fly.draw(screen_manager.screen)
+            if check_collision(frog_x, frog_y, frog_width, frog_height, fly):
+                flies.remove(fly)
+                score += 1
+            else:
+                # Update the display (draw the fly at new position)
+                fly.draw(screen_manager.screen)
 
         # Refresh display
         pygame.display.flip()
