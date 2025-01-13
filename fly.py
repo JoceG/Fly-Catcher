@@ -16,6 +16,41 @@ class Fly:
 
         self._color = background_color # Black color for the fly
 
+    @property
+    def width(self):
+        """
+        Returns the current fly width.
+        """
+        return self._width
+
+    @property
+    def height(self):
+        """
+        Returns the current fly height.
+        """
+        return self._height
+
+    @property
+    def x_pos(self):
+        """
+        Returns the fly's x position.
+        """
+        return self._x
+
+    @property
+    def y_pos(self):
+        """
+        Returns the fly's y position.
+        """
+        return self._y
+
+    @property
+    def color(self):
+        """
+        Returns the fly's color
+        """
+        return self._color
+    
     def resize(self, width_scale, height_scale):
         """
         Resizes the object based on the scaling factors.
@@ -36,4 +71,3 @@ class Fly:
         """
         pygame.draw.rect(screen, self._color, (self._x, self._y, self._width, self._height))
 
-        
