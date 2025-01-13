@@ -1,6 +1,6 @@
 import pygame
 from fly import Fly
-from screenmanager import ScreenManager
+from screen_manager import ScreenManager
 
 def check_collision(frog_x, frog_y, frog_width, frog_height, fly):
     """
