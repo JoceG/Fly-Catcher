@@ -1,5 +1,5 @@
 import pytest
-from screenmanager import ScreenManager
+from screen_manager import ScreenManager
 
 @pytest.fixture
 def screen_manager():
