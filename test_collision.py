@@ -1,18 +1,14 @@
 import pytest
+from frog import Frog
 from fly import Fly
 from main import check_collision
 
 @pytest.fixture
 def frog():
     """
-    Fixture to provide a common set of frog attributes
+    Fixture to create a Frog instance with default values.
     """
-    return {
-        "x": 50,
-        "y": 50,
-        "width": 30,
-        "height": 30
-    }
+    return Frog(250.0, 250.0)
 
 @pytest.fixture
 def fly():
@@ -26,9 +22,9 @@ def test_collision_occurs(frog, fly):
     Test that a collision is correctly detected when the frog and the fly overlap.
     """
     # Set fly position to collide with the frog
-    fly.x, fly.y = 60, 60
+    fly.x, fly.y = 250.0, 250.0
     
-    assert check_collision(frog["x"], frog["y"], frog["width"], frog["height"], fly) is True
+    assert check_collision(frog, fly) is True
 
 def test_no_collision_occurs(frog, fly):
     """
@@ -37,4 +33,4 @@ def test_no_collision_occurs(frog, fly):
     # Set fly position far away from the frog
     fly.x, fly.y = 100, 100
 
-    assert check_collision(frog["x"], frog["y"], frog["width"], frog["height"], fly) is False
+    assert check_collision(frog, fly) is False
