@@ -1,5 +1,6 @@
 import pygame
 from fly import Fly
+from frog import Frog
 from screen_manager import ScreenManager
 
 def draw_score(screen, score):
@@ -7,11 +8,11 @@ def draw_score(screen, score):
     score_text = font.render(f"Score: {score}", True, (0, 0, 0))  # Black color for the score
     screen.blit(score_text, (10, 10))  # Display the score at position (10, 10)
 
-def check_collision(frog_x, frog_y, frog_width, frog_height, fly):
+def check_collision(frog, fly):
     """
     Checks if the frog and a fly are colliding.
     """
-    frog_rect = pygame.Rect(frog_x, frog_y, frog_width, frog_height)
+    frog_rect = pygame.Rect(frog.x, frog.y, frog.width, frog.height)
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
@@ -22,28 +23,17 @@ def create_game_loop(screen_manager, initial_fly_count=5):
     Args:
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
+    # Create the Frog instance (using floats for precision)
+    frog = Frog(screen_manager.width / 2.0, screen_manager.height / 2.0, 30.0, 30.0, 5.0, (0, 255, 0))
+    
     # Number of flies the frog has eaten
     score = 0
     
     # List to store flies
     flies = [Fly(screen_manager.width, screen_manager.height) for i in range(initial_fly_count)]
-    
-    # Set initial position, size, movement speed, and color of the frog (using floats for precision)
-    frog_x, frog_y = screen_manager.width / 2.0, screen_manager.height / 2.0
-    frog_width, frog_height = 30.0, 30.0
-    frog_speed = 5.0
-    frog_color = (0, 255, 0)
 
     # Set initial size of the flies (using floats for precision)
     fly_width, fly_height = 10.0, 10.0
-
-    # Dictionary to store movement states
-    movement = {
-        'left': False,
-        'right': False,
-        'down': False,
-        'up': False
-    }
 
     # Set up a clock for a consistent frame rate
     clock = pygame.time.Clock()
@@ -71,10 +61,8 @@ def create_game_loop(screen_manager, initial_fly_count=5):
                 width_scale, height_scale = screen_manager.get_scaling_factors()
 
                 # Update the frog's position and size relative to the new screen size
-                frog_x *= width_scale
-                frog_y *= height_scale
-                frog_width *= width_scale
-                frog_height *= height_scale
+                frog.resize(width_scale, height_scale)
+                frog.reposition(width_scale, height_scale)
 
                 # Update the flies' size relative to the new screen size
                 fly_width *= width_scale
@@ -87,43 +75,36 @@ def create_game_loop(screen_manager, initial_fly_count=5):
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
-                    movement['left'] = True
+                    frog.movement['left'] = True
                 if event.key == pygame.K_RIGHT:
-                    movement['right'] = True
+                    frog.movement['right'] = True
                 if event.key == pygame.K_DOWN:
-                    movement['down'] = True
+                    frog.movement['down'] = True
                 if event.key == pygame.K_UP:
-                    movement['up'] = True
+                    frog.movement['up'] = True
                     
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
-                    movement['left'] = False
+                    frog.movement['left'] = False
                 if event.key == pygame.K_RIGHT:
-                    movement['right'] = False
+                    frog.movement['right'] = False
                 if event.key == pygame.K_DOWN:
-                    movement['down'] = False
+                    frog.movement['down'] = False
                 if event.key == pygame.K_UP:
-                    movement['up'] = False
+                    frog.movement['up'] = False
 
         # Only proceed with game logic if still running
         if running:
-            # Update frog position based on movement states
-            if movement['left'] and frog_x > 0:
-                frog_x -= frog_speed
-            if movement['right'] and frog_x + frog_width < screen_manager.width: 
-                frog_x += frog_speed
-            if movement['down'] and frog_y + frog_height < screen_manager.height:
-                frog_y += frog_speed
-            if movement['up'] and frog_y > 0:
-                frog_y -= frog_speed
+            # Update the frog's position based on the movement states
+            frog.move(screen_manager)
             
             # Update the display (draw the frog at new position)
             screen_manager.clear() # clear screen with the background color
-            pygame.draw.rect(screen_manager.screen, frog_color, (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
+            frog.draw(screen_manager.screen)
 
             # Draw flies
             for fly in flies:
-                if check_collision(frog_x, frog_y, frog_width, frog_height, fly):
+                if check_collision(frog, fly):
                     flies.remove(fly)
                     score += 1
                 else:
