@@ -105,37 +105,39 @@ def create_game_loop(screen_manager, initial_fly_count=5):
                 if event.key == pygame.K_UP:
                     movement['up'] = False
 
-        # Update frog position based on movement states
-        if movement['left'] and frog_x > 0:
-            frog_x -= frog_speed
-        if movement['right'] and frog_x + frog_width < screen_manager.width: 
-            frog_x += frog_speed
-        if movement['down'] and frog_y + frog_height < screen_manager.height:
-            frog_y += frog_speed
-        if movement['up'] and frog_y > 0:
-            frog_y -= frog_speed
-        
-        # Update the display (draw the frog at new position)
-        screen_manager.clear() # clear screen with the background color
-        pygame.draw.rect(screen_manager.screen, frog_color, (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
+        # Only proceed with game logic if still running
+        if running:
+            # Update frog position based on movement states
+            if movement['left'] and frog_x > 0:
+                frog_x -= frog_speed
+            if movement['right'] and frog_x + frog_width < screen_manager.width: 
+                frog_x += frog_speed
+            if movement['down'] and frog_y + frog_height < screen_manager.height:
+                frog_y += frog_speed
+            if movement['up'] and frog_y > 0:
+                frog_y -= frog_speed
+            
+            # Update the display (draw the frog at new position)
+            screen_manager.clear() # clear screen with the background color
+            pygame.draw.rect(screen_manager.screen, frog_color, (frog_x, frog_y, frog_width, frog_height))  # draw frog (green rectangle for now)
 
-        # Draw flies
-        for fly in flies:
-            if check_collision(frog_x, frog_y, frog_width, frog_height, fly):
-                flies.remove(fly)
-                score += 1
-            else:
-                # Update the display (draw the fly at new position)
-                fly.draw(screen_manager.screen)
+            # Draw flies
+            for fly in flies:
+                if check_collision(frog_x, frog_y, frog_width, frog_height, fly):
+                    flies.remove(fly)
+                    score += 1
+                else:
+                    # Update the display (draw the fly at new position)
+                    fly.draw(screen_manager.screen)
 
-        # Draw the score
-        draw_score(screen_manager.screen, score)
+            # Draw the score
+            draw_score(screen_manager.screen, score)
 
-        # Refresh display
-        pygame.display.flip()
+            # Refresh display
+            pygame.display.flip()
 
-        # Limit the frame rate to 60 frames per second
-        clock.tick(60)
+            # Limit the frame rate to 60 frames per second
+            clock.tick(60)
 
     pygame.quit()
                 
