@@ -1,7 +1,7 @@
 import pygame
 
 class Frog:
-    def __init__(self, x, y, width, height, speed, color):
+    def __init__(self, x, y, width=30.0, height=30.0, speed=5.0, color=(0, 255, 0)):
         self._x = x
         self._y = y
         self._width = width

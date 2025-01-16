@@ -23,8 +23,8 @@ def create_game_loop(screen_manager, initial_fly_count=5):
     Args:
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
-    # Create the Frog instance (using floats for precision)
-    frog = Frog(screen_manager.width / 2.0, screen_manager.height / 2.0, 30.0, 30.0, 5.0, (0, 255, 0))
+    # Create the Frog instance
+    frog = Frog(screen_manager.width / 2, screen_manager.height / 2)
     
     # Number of flies the frog has eaten
     score = 0
