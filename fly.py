@@ -2,7 +2,7 @@ import random
 import pygame
 
 class Fly:
-    def __init__(self, screen_width, screen_height, width=10, height=10, background_color=(0, 0, 0)):
+    def __init__(self, screen_width, screen_height, width=10.0, height=10.0, background_color=(0, 0, 0)):
         """
         Initialize the fly with default size and color and random position.
         """
@@ -90,5 +90,5 @@ class Fly:
         """
         Draws the fly (used after resizing and reposition from screen resizing).
         """
-        pygame.draw.rect(screen, self._color, (self._x, self._y, self._width, self._height))
+        pygame.draw.rect(screen, self._color, (int(self._x), int(self._y), int(self._width), int(self._height)))
 
