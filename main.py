@@ -16,7 +16,7 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
-def create_game_loop(screen_manager, initial_fly_count=5):
+def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
     
@@ -24,16 +24,16 @@ def create_game_loop(screen_manager, initial_fly_count=5):
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
     # Create the Frog instance
-    frog = Frog(screen_manager.width / 2, screen_manager.height / 2)
+    frog = Frog(screen_manager.width / 2, screen_manager.height / 2, frog_img)
     
     # Number of flies the frog has eaten
     score = 0
     
     # List to store flies
-    flies = [Fly(screen_manager.width, screen_manager.height) for i in range(initial_fly_count)]
+    flies = [Fly(screen_manager.width, screen_manager.height, fly_img) for i in range(initial_fly_count)]
 
     # Set initial size of the flies (using floats for precision)
-    fly_width, fly_height = 10.0, 10.0
+    fly_width, fly_height = 30.0, 30.0
 
     # Set up a clock for a consistent frame rate
     clock = pygame.time.Clock()
@@ -47,7 +47,7 @@ def create_game_loop(screen_manager, initial_fly_count=5):
 
             # Generate a new fly when the timer event occurs
             if event.type == FLY_GENERATE_EVENT:
-                flies.append(Fly(screen_manager.width, screen_manager.height, fly_width, fly_height))
+                flies.append(Fly(screen_manager.width, screen_manager.height, fly_img, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
@@ -125,9 +125,13 @@ def create_game_loop(screen_manager, initial_fly_count=5):
 if __name__ == '__main__':
     # Initialize the ScreenManger
     screen_manager = ScreenManager()
-    
+
+    # Initialize the frog and fly images
+    frog_img = pygame.image.load('frog.png')
+    fly_img = pygame.image.load('fly.png')
+
     # Fly generation timer event
     FLY_GENERATE_EVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(FLY_GENERATE_EVENT, 2000) # Trigger every 5 seconds
 
-    create_game_loop(screen_manager)
+    create_game_loop(screen_manager, frog_img, fly_img)

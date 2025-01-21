@@ -1,7 +1,7 @@
 import pygame
 
 class Frog:
-    def __init__(self, x, y, width=30.0, height=30.0, speed=5.0, color=(0, 255, 0)):
+    def __init__(self, x, y, frog_img, width=70.0, height=60.0, speed=5.0, color=(0, 255, 0)):
         self._x = x
         self._y = y
         self._width = width
@@ -14,6 +14,9 @@ class Frog:
             'down': False,
             'up': False
         }
+
+        self._original_img = frog_img
+        self._img = pygame.transform.scale(self._original_img, (int(self._width), int(self._height)))
 
     @property
     def x(self):
@@ -83,6 +86,7 @@ class Frog:
         """
         self._width *= width_scale
         self._height *= height_scale
+        self._img = pygame.transform.scale(self._original_img, (int(self._width), int(self._height)))
 
     def reposition(self, width_scale, height_scale):
         """
@@ -96,4 +100,5 @@ class Frog:
         """
         Draws the frog (used after resize and reposition from screen resizing).
         """
-        pygame.draw.rect(screen, self._color, (int(self._x), int(self._y), int(self._width), int(self._height)))
+        # Blit the image at the specified (x, y) coordinates
+        screen.blit(self._img, (int(self._x), int(self._y)))
