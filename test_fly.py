@@ -1,3 +1,4 @@
+import pygame
 import pytest
 from fly import Fly
 
@@ -6,14 +7,16 @@ def fly():
     """
     Fixture to create a Fly instance with default size and random position.
     """
-    return Fly(screen_width=500, screen_height=500)
+    pygame.init()  # Ensure pygame is initialized in the test environment
+    fly_img = pygame.image.load('fly.png') # Load the fly image
+    return Fly(screen_width=500, screen_height=500, fly_img=fly_img)
 
 def test_initialization(fly):
     """
     Test that the Fly initializes with correct attributes.
     """
-    assert fly.width == 10
-    assert fly.height == 10
+    assert fly.width == 30
+    assert fly.height == 30
     assert 0 <= fly.x <= 500 - fly.width
     assert 0 <= fly.y <= 500 - fly.height
     assert fly._color == (0, 0, 0)
@@ -56,7 +59,7 @@ def test_resize_and_reposition(fly):
     fly.reposition(width_scale, height_scale)
 
     # Validate changes
-    assert fly.width == 20
-    assert fly.height == 15
+    assert fly.width == 60
+    assert fly.height == 45
     assert fly.x == initial_x * width_scale
     assert fly.y == initial_y * height_scale
