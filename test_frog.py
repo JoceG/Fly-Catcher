@@ -1,3 +1,4 @@
+import pygame
 import pytest
 from frog import Frog
 from screen_manager import ScreenManager
@@ -14,7 +15,9 @@ def frog():
     """
     Fixture to create a Frog instance with default values.
     """
-    return Frog(x=250.0, y=250.0)
+    pygame.init()  # Ensure pygame is initialized in the test environment
+    frog_img = pygame.image.load('frog.png') # Load the frog image
+    return Frog(x=250.0, y=250.0, frog_img=frog_img)
 
 def test_initialization(frog):
     """
@@ -22,8 +25,8 @@ def test_initialization(frog):
     """
     assert frog.x == 250.0
     assert frog.y == 250.0
-    assert frog.width == 30.0
-    assert frog.height == 30.0
+    assert frog.width == 70.0
+    assert frog.height == 60.0
     assert frog.speed == 5.0
     assert frog.color == (0, 255, 0)
     assert frog.movement == {
@@ -107,7 +110,7 @@ def test_resize_and_reposition(frog):
     frog.reposition(width_scale, height_scale)
 
     # Validate changes
-    assert frog.width == 60
-    assert frog.height == 45
+    assert frog.width == 140
+    assert frog.height == 90
     assert frog.x == initial_x * width_scale
     assert frog.y == initial_y * height_scale
