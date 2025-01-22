@@ -19,7 +19,7 @@ def test_initialization(fly):
     assert fly.height == 30
     assert 0 <= fly.x <= 500 - fly.width
     assert 0 <= fly.y <= 500 - fly.height
-    assert fly._color == (0, 0, 0)
+    assert fly.color == (0, 0, 0)
 
 def test_resize(fly):
     """
