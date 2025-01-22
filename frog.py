@@ -2,103 +2,54 @@ import pygame
 
 class Frog:
     def __init__(self, x, y, frog_img, width=70.0, height=60.0, speed=5.0, color=(0, 255, 0)):
-        self._x = x
-        self._y = y
-        self._width = width
-        self._height = height
-        self._speed = speed
-        self._color = color
-        self._movement = {
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
+        self.speed = speed
+        self.color = color
+        self.movement = {
             'left': False,
             'right': False,
             'down': False,
             'up': False
         }
 
-        self._original_img = frog_img
-        self._img = pygame.transform.scale(self._original_img, (int(self._width), int(self._height)))
-
-    @property
-    def x(self):
-        """
-        Returns the frog's x position.
-        """
-        return self._x
-
-    @property
-    def y(self):
-        """
-        Returns the frog's y position.
-        """
-        return self._y
-
-    @property
-    def width(self):
-        """
-        Returns the frog's current width.
-        """
-        return self._width
-
-    @property
-    def height(self):
-        """
-        Returns the frog's current height.
-        """
-        return self._height
-
-    @property
-    def speed(self):
-        """
-        Returns the frog's speed.
-        """
-        return self._speed
-
-    @property
-    def color(self):
-        """
-        Returns the frog's color.
-        """
-        return self._color
-
-    @property
-    def movement(self):
-        """
-        Returns the frog's movement direction dictionary
-        """
-        return self._movement
+        self.original_img = frog_img
+        self.img = pygame.transform.scale(self.original_img, (int(self.width), int(self.height)))
 
     def move(self, screen_manager):
         """
         Updates the frog's position based on movement states
         """
-        if self._movement['left'] and self._x > 0:
-            self._x -= self._speed
-        if self._movement['right'] and self._x + self._width < screen_manager.width: 
-            self._x += self._speed
-        if self._movement['down'] and self._y + self._height < screen_manager.height:
-            self._y += self._speed
-        if self._movement['up'] and self._y > 0:
-            self._y -= self._speed
+        if self.movement['left'] and self.x > 0:
+            self.x -= self.speed
+        if self.movement['right'] and self.x + self.width < screen_manager.width: 
+            self.x += self.speed
+        if self.movement['down'] and self.y + self.height < screen_manager.height:
+            self.y += self.speed
+        if self.movement['up'] and self.y > 0:
+            self.y -= self.speed
 
     def resize(self, width_scale, height_scale):
         """
         Resizes the frog based on the scaling factors.
         """
-        self._width *= width_scale
-        self._height *= height_scale
-        self._img = pygame.transform.scale(self._original_img, (int(self._width), int(self._height)))
+        self.width *= width_scale
+        self.height *= height_scale
+        self.img = pygame.transform.scale(self.original_img, (int(self.width), int(self.height)))
 
     def reposition(self, width_scale, height_scale):
         """
         Repositions the frog based on the scaling factors to maintain its relative position
         on the screen.
         """
-        self._x *= width_scale
-        self._y *= height_scale
+        self.x *= width_scale
+        self.y *= height_scale
 
     def draw(self, screen):
         """
         Draws the frog (used after resize and reposition from screen resizing).
         """
         # Blit the image at the specified (x, y) coordinates
-        screen.blit(self._img, (int(self._x), int(self._y)))
+        screen.blit(self.img, (int(self.x), int(self.y)))
