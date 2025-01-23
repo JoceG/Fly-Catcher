@@ -1,14 +1,21 @@
 import pygame
+import random
 from fly import Fly
 from frog import Frog
 from screen_manager import ScreenManager
+from special_fly import SpecialFly
 
 def draw_popups(score_popups):
     current_time = pygame.time.get_ticks()
     for popup in score_popups[:]:
         if current_time - popup["time"] < 1000:  # Show for 1 second
             font = pygame.font.Font(None, 30)
-            text = font.render("+5s", True, (0, 255, 0))  # Green text
+
+            if popup["special"]:
+                text = font.render("+25s", True, (255, 223, 0))  # Gold text for special fly
+            else:
+                text = font.render("+5s", True, (169, 169, 169))  # Gray text for regular flies
+
             screen_manager.screen.blit(text, (popup["pos"][0], popup["pos"][1] - 20))
         else:
             score_popups.remove(popup)  # Remove after 1 second
@@ -42,7 +49,7 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
-def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
+def create_game_loop(screen_manager, frog_img, fly_img, special_fly_img, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
     
@@ -83,8 +90,13 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
                 running = False
 
             # Generate a new fly when the timer event occurs
-            if event.type == FLY_GENERATE_EVENT:
+            if event.type == REGULAR_FLY_EVENT:
                 flies.append(Fly(screen_manager.width, screen_manager.height, fly_img, fly_width, fly_height))
+
+            if event.type == SPECIAL_FLY_EVENT:
+                # Occasionally spawn a special fly with a 30% chance
+                #if random.random() < 0.3:
+                flies.append(SpecialFly(screen_manager.width, screen_manager.height, special_fly_img, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
@@ -143,17 +155,29 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
             for fly in flies:
                 if check_collision(frog, fly):
                     flies.remove(fly)
-                    countdown_time += 5 
+
+                    if isinstance(fly, SpecialFly):
+                        countdown_time += 25
+                    else:
+                        countdown_time += 5
+                    
                     score += 1
 
                     # Store the position and the time of the popup
                     score_popups.append({
                         "pos": (fly.x, fly.y),
-                        "time": pygame.time.get_ticks()
+                        "time": pygame.time.get_ticks(),
+                        "special": isinstance(fly, SpecialFly)
                     })
+
+                elif isinstance(fly, SpecialFly) and not fly.move():
+                    print('removing special fly')
+                    flies.remove(fly) # Remove the special fly if it moves out of bounds
+
                 else:
-                    # Update the fly's position based on the movement states
-                    fly.move()
+                    # Update the generic fly's position based on the movement states
+                    if not isinstance(fly, SpecialFly):
+                        fly.move()
                     
                     # Update the display (draw the fly at new position)
                     fly.draw(screen_manager.screen)
@@ -188,9 +212,14 @@ if __name__ == '__main__':
     # Initialize the frog and fly images
     frog_img = pygame.image.load('frog.png')
     fly_img = pygame.image.load('fly.png')
+    special_fly_img = pygame.image.load('special_fly.png')
 
-    # Fly generation timer event
-    FLY_GENERATE_EVENT = pygame.USEREVENT + 1
-    pygame.time.set_timer(FLY_GENERATE_EVENT, 2000) # Trigger every 5 seconds
+    # Define custom events for fly generation
+    REGULAR_FLY_EVENT = pygame.USEREVENT + 1
+    SPECIAL_FLY_EVENT = pygame.USEREVENT + 2
 
-    create_game_loop(screen_manager, frog_img, fly_img)
+    # Set timers for regular and special flies
+    pygame.time.set_timer(REGULAR_FLY_EVENT, 2000)  # Regular flies every 2 seconds
+    pygame.time.set_timer(SPECIAL_FLY_EVENT, 8000)  # Special flies every 8 seconds
+
+    create_game_loop(screen_manager, frog_img, fly_img, special_fly_img)
