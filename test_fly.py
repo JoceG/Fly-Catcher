@@ -17,10 +17,36 @@ def test_initialization(fly):
     """
     assert fly.width == 30
     assert fly.height == 30
+    assert fly.speed == 2
     assert 0 <= fly.x <= 500 - fly.width
     assert 0 <= fly.y <= 500 - fly.height
     assert fly.color == (0, 0, 0)
 
+def test_set_valid_movement(fly):
+    """
+    Test that the Fly initializes with valid movement directions. 
+    """
+    assert not (fly.movement["left"] and fly.movement["right"])
+    assert not (fly.movement["up"] and fly.movement["down"])
+    assert any([fly.movement["left"], fly.movement["right"], fly.movement["up"], fly.movement["down"]])
+    
+def test_move(fly):
+    """
+    Test that the Fly moves correctly based on the movement directions.
+    """
+    fly.x = 250
+    fly.y = 250
+    
+    fly.movement["left"] = False
+    fly.movement["right"] = True
+    fly.movement["up"] = True
+    fly.movement["down"] = False
+    
+    fly.move()
+    
+    assert fly.x == 252
+    assert fly.y == 248
+    
 def test_resize(fly):
     """
     Test that the Fly resizes correctly based on scaling factors.
