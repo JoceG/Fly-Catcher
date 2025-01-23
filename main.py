@@ -3,6 +3,16 @@ from fly import Fly
 from frog import Frog
 from screen_manager import ScreenManager
 
+def draw_popups(score_popups):
+    current_time = pygame.time.get_ticks()
+    for popup in score_popups[:]:
+        if current_time - popup["time"] < 1000:  # Show for 1 second
+            font = pygame.font.Font(None, 30)
+            text = font.render("+5s", True, (0, 255, 0))  # Green text
+            screen_manager.screen.blit(text, (popup["pos"][0], popup["pos"][1] - 20))
+        else:
+            score_popups.remove(popup)  # Remove after 1 second
+
 def draw_score_and_time(screen, score, time_remaining):
     font = pygame.font.SysFont("Arial", 24)
     score_x = 10 
@@ -44,6 +54,9 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
 
     # Time given (2 minutes)
     countdown_time = 120
+
+    # Store active pop-ups
+    score_popups = []
     
     # Create the Frog instance
     frog = Frog(screen_manager.width / 2, screen_manager.height / 2, frog_img)
@@ -130,13 +143,23 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
             for fly in flies:
                 if check_collision(frog, fly):
                     flies.remove(fly)
+                    countdown_time += 5 
                     score += 1
+
+                    # Store the position and the time of the popup
+                    score_popups.append({
+                        "pos": (fly.x, fly.y),
+                        "time": pygame.time.get_ticks()
+                    })
                 else:
                     # Update the fly's position based on the movement states
                     fly.move()
                     
                     # Update the display (draw the fly at new position)
                     fly.draw(screen_manager.screen)
+
+            # Draw the +5 popups
+            draw_popups(score_popups)
 
             # Draw the score and time
             elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
