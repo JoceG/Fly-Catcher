@@ -108,6 +108,9 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
                     flies.remove(fly)
                     score += 1
                 else:
+                    # Update the fly's position based on the movement states
+                    fly.move()
+                    
                     # Update the display (draw the fly at new position)
                     fly.draw(screen_manager.screen)
 
