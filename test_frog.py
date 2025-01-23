@@ -28,7 +28,6 @@ def test_initialization(frog):
     assert frog.width == 70.0
     assert frog.height == 60.0
     assert frog.speed == 5.0
-    assert frog.color == (0, 255, 0)
     assert frog.movement == {
         'left': False,
         'right': False,

@@ -1,13 +1,12 @@
 import pygame
 
 class Frog:
-    def __init__(self, x, y, frog_img, width=70.0, height=60.0, speed=5.0, color=(0, 255, 0)):
+    def __init__(self, x, y, frog_img, width=70.0, height=60.0, speed=5.0):
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.speed = speed
-        self.color = color
         self.movement = {
             'left': False,
             'right': False,

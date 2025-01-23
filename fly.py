@@ -2,7 +2,7 @@ import random
 import pygame
 
 class Fly:
-    def __init__(self, screen_width, screen_height, fly_img, width=30.0, height=30.0, background_color=(0, 0, 0), speed=2):
+    def __init__(self, screen_width, screen_height, fly_img, width=30.0, height=30.0, speed=2):
         """
         Initialize the fly with default size and color and random position.
         """
@@ -20,7 +20,6 @@ class Fly:
         self.x = random.randint(0, int(screen_width) - int(self.width))
         self.y = random.randint(0, int(screen_height) - int(self.height))
 
-        self.color = background_color # Black color for the fly
         self.screen_width = screen_width  # Store screen width
         self.screen_height = screen_height  # Store screen height
 
