@@ -3,10 +3,36 @@ from fly import Fly
 from frog import Frog
 from screen_manager import ScreenManager
 
-def draw_score(screen, score):
-    font = pygame.font.Font(None, 36)
-    score_text = font.render(f"Score: {score}", True, (0, 0, 0))  # Black color for the score
-    screen.blit(score_text, (10, 10))  # Display the score at position (10, 10)
+def draw_popups(score_popups):
+    current_time = pygame.time.get_ticks()
+    for popup in score_popups[:]:
+        if current_time - popup["time"] < 1000:  # Show for 1 second
+            font = pygame.font.Font(None, 30)
+            text = font.render("+5s", True, (0, 255, 0))  # Green text
+            screen_manager.screen.blit(text, (popup["pos"][0], popup["pos"][1] - 20))
+        else:
+            score_popups.remove(popup)  # Remove after 1 second
+
+def draw_score_and_time(screen, score, time_remaining):
+    font = pygame.font.SysFont("Arial", 24)
+    score_x = 10 
+    minutes = time_remaining // 60
+    seconds = time_remaining % 60
+
+    # Render the score text
+    score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+    score_width = score_text.get_width()
+    screen.blit(score_text, (score_x, 10))  # Display score at position (10, 10)
+
+    # Render the time remaining text
+    time_text = font.render(f"{minutes:02}:{seconds % 60:02}", True, (0, 0, 0))  # Format: MM:SS
+    time_width = time_text.get_width()
+
+    # Calculate the x-coordinate for centering the time relative to the score width
+    time_x = score_x + (score_width - time_width) // 2  # Horizontally center the time under the score
+
+    # Display the time below the score
+    screen.blit(time_text, (time_x, 50))  # Position the time 50px below the score
 
 def check_collision(frog, fly):
     """
@@ -23,6 +49,15 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
     Args:
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
+    # Timer starts here when the loop begins
+    start_time = pygame.time.get_ticks()
+
+    # Time given (2 minutes)
+    countdown_time = 120
+
+    # Store active pop-ups
+    score_popups = []
+    
     # Create the Frog instance
     frog = Frog(screen_manager.width / 2, screen_manager.height / 2, frog_img)
     
@@ -39,6 +74,8 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
     clock = pygame.time.Clock()
     
     running = True
+    game_over = False
+    
     while running:
         # Handle events
         for event in pygame.event.get():
@@ -106,7 +143,14 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
             for fly in flies:
                 if check_collision(frog, fly):
                     flies.remove(fly)
+                    countdown_time += 5 
                     score += 1
+
+                    # Store the position and the time of the popup
+                    score_popups.append({
+                        "pos": (fly.x, fly.y),
+                        "time": pygame.time.get_ticks()
+                    })
                 else:
                     # Update the fly's position based on the movement states
                     fly.move()
@@ -114,14 +158,26 @@ def create_game_loop(screen_manager, frog_img, fly_img, initial_fly_count=5):
                     # Update the display (draw the fly at new position)
                     fly.draw(screen_manager.screen)
 
-            # Draw the score
-            draw_score(screen_manager.screen, score)
+            # Draw the +5 popups
+            draw_popups(score_popups)
+
+            # Draw the score and time
+            elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
+            remaining_time = max(0, countdown_time - elapsed_time)
+            draw_score_and_time(screen_manager.screen, score, remaining_time)
+
+            if remaining_time == 0:
+                game_over = True
+                break
 
             # Refresh display
             pygame.display.flip()
 
             # Limit the frame rate to 60 frames per second
             clock.tick(60)
+
+    if game_over:
+        print("Time's up! Game over.")
 
     pygame.quit()
                 
