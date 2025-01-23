@@ -27,19 +27,19 @@ class SpecialFly(Fly):
             self.y += self.speed
 
         # Check if the fly is past the left edge
-        if self.x + self.width <= 0: 
+        if self.x + self.width <= 0:  # The right edge of the fly is off the left side
             return False
 
         # Check if the fly is past the right edge
-        if self.x >= self.screen_width + self.width:
+        if self.x >= self.screen_width:  # The left edge of the fly is off the right side
             return False
 
         # Check if the fly is past the top edge
-        if self.y + self.height <= 0:
+        if self.y + self.height <= 0:  # The bottom edge of the fly is off the top side
             return False
 
         # Check if the fly is past the bottom edge
-        if self.y >= self.screen_height + self.height:
+        if self.y >= self.screen_height:  # The top edge of the fly is off the bottom side
             return False
 
         return True
