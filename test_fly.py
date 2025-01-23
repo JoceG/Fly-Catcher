@@ -20,7 +20,6 @@ def test_initialization(fly):
     assert fly.speed == 2
     assert 0 <= fly.x <= 500 - fly.width
     assert 0 <= fly.y <= 500 - fly.height
-    assert fly.color == (0, 0, 0)
 
 def test_set_valid_movement(fly):
     """

@@ -27,7 +27,7 @@ def fly():
     Fixture to create a Fly instance with default size and random position.
     """
     fly_img = pygame.image.load('fly.png') # Load the fly image
-    return Fly(screen_width=500, screen_height=500, fly_img=fly_img, width=10, height=10, background_color = (0, 0, 0))
+    return Fly(screen_width=500, screen_height=500, fly_img=fly_img, width=10, height=10)
 
 def test_collision_occurs(frog, fly):
     """
