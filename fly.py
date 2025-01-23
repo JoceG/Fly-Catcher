@@ -90,24 +90,72 @@ class Fly:
         Checks if the fly is near an edge and changes its direction.
         """
         # Check if the fly is near the left edge
-        if self.x <= 0: 
+        if self.x <= 0:
             self.movement["left"] = False
-            self.movement["right"] = True
+            self.movement["right"] = random.choice([True, False])
+            self.movement["up"] = random.choice([True, False])
+            self.movement["down"] = random.choice([True, False])
+
+            # Ensure no conflicting directions (both up-down cannot be True simultaneously)
+            if self.movement["up"] and self.movement["down"]:
+                direction = random.choice(["up", "down"])
+                self.movement[direction] = False
+
+             # Ensure at least one direction is true
+            if not any([self.movement["right"], self.movement["up"], self.movement["down"]]):
+                direction = random.choice(["right", "up", "down"])
+                self.movement[direction] = True
 
         # Check if the fly is near the right edge
         if self.x >= self.screen_width - self.width:
+            self.movement["left"] = random.choice([True, False])
             self.movement["right"] = False
-            self.movement["left"] = True
+            self.movement["up"] = random.choice([True, False])
+            self.movement["down"] = random.choice([True, False])
+
+            # Ensure no conflicting directions (both up-down cannot be True simultaneously)
+            if self.movement["up"] and self.movement["down"]:
+                direction = random.choice(["up", "down"])
+                self.movement[direction] = False
+
+             # Ensure at least one direction is true
+            if not any([self.movement["left"], self.movement["up"], self.movement["down"]]):
+                direction = random.choice(["left", "up", "down"])
+                self.movement[direction] = True
 
         # Check if the fly is near the top edge
         if self.y <= 0:
+            self.movement["left"] = random.choice([True, False])
+            self.movement["right"] = random.choice([True, False])
             self.movement["up"] = False
-            self.movement["down"] = True
+            self.movement["down"] = random.choice([True, False])
+
+            # Ensure no conflicting directions (both up-down cannot be True simultaneously)
+            if self.movement["left"] and self.movement["right"]:
+                direction = random.choice(["left", "right"])
+                self.movement[direction] = False
+
+             # Ensure at least one direction is true
+            if not any([self.movement["left"], self.movement["right"], self.movement["down"]]):
+                direction = random.choice(["left", "right", "down"])
+                self.movement[direction] = True
 
         # Check if the fly is near the bottom edge
         if self.y >= self.screen_height - self.height:
+            self.movement["left"] = random.choice([True, False])
+            self.movement["right"] = random.choice([True, False])
+            self.movement["up"] = random.choice([True, False])
             self.movement["down"] = False
-            self.movement["up"] = True
+
+            # Ensure no conflicting directions (both up-down cannot be True simultaneously)
+            if self.movement["left"] and self.movement["right"]:
+                direction = random.choice(["left", "right"])
+                self.movement[direction] = False
+
+             # Ensure at least one direction is true
+            if not any([self.movement["left"], self.movement["right"], self.movement["up"]]):
+                direction = random.choice(["left", "right", "up"])
+                self.movement[direction] = True
 
     def resize(self, width_scale, height_scale):
         """
