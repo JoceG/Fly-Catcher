@@ -5,9 +5,9 @@ class SpecialFly(Fly):
     """
     A special fly that disappears when it moves off the screen.
     """
-    def __init__(self, screen_width, screen_height, special_fly_img, width=30.0, height=30.0, speed=2):
+    def __init__(self, screen_width, screen_height, special_fly_img_left, special_fly_img_right, width=30.0, height=30.0, speed=2):
         # Call the parent class (Fly) constructor to inherit its properties
-        super().__init__(screen_width, screen_height, special_fly_img, width, height, speed)
+        super().__init__(screen_width, screen_height, special_fly_img_left, special_fly_img_right, width, height, speed)
 
         # Randomly spawn near the center of the screen
         self.x = random.randint(screen_width // 4, 3 * screen_width // 4)  # Random position in the middle third of the screen
@@ -15,7 +15,7 @@ class SpecialFly(Fly):
 
     def move(self):
         """
-        Moves the fly and changes direction if it hits the edge.
+        Moves the fly and returns boolean indicating whether the fly is still on the screen.
         """
         if self.movement["left"]:
             self.x -= self.speed

@@ -49,7 +49,8 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
-def create_game_loop(screen_manager, frog_img, fly_img, special_fly_img, initial_fly_count=5):
+def create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left,
+                     special_fly_img_right, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
     
@@ -72,7 +73,7 @@ def create_game_loop(screen_manager, frog_img, fly_img, special_fly_img, initial
     score = 0
     
     # List to store flies
-    flies = [Fly(screen_manager.width, screen_manager.height, fly_img) for i in range(initial_fly_count)]
+    flies = [Fly(screen_manager.width, screen_manager.height, fly_img_left, fly_img_right) for i in range(initial_fly_count)]
 
     # Set initial size of the flies (using floats for precision)
     fly_width, fly_height = 30.0, 30.0
@@ -91,12 +92,12 @@ def create_game_loop(screen_manager, frog_img, fly_img, special_fly_img, initial
 
             # Generate a new fly when the timer event occurs
             if event.type == REGULAR_FLY_EVENT:
-                flies.append(Fly(screen_manager.width, screen_manager.height, fly_img, fly_width, fly_height))
+                flies.append(Fly(screen_manager.width, screen_manager.height, fly_img_left, fly_img_right, fly_width, fly_height))
 
             if event.type == SPECIAL_FLY_EVENT:
                 # Occasionally spawn a special fly with a 30% chance
                 #if random.random() < 0.3:
-                flies.append(SpecialFly(screen_manager.width, screen_manager.height, special_fly_img, fly_width, fly_height))
+                flies.append(SpecialFly(screen_manager.width, screen_manager.height, special_fly_img_left, special_fly_img_right, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
@@ -171,7 +172,6 @@ def create_game_loop(screen_manager, frog_img, fly_img, special_fly_img, initial
                     })
 
                 elif isinstance(fly, SpecialFly) and not fly.move():
-                    print('removing special fly')
                     flies.remove(fly) # Remove the special fly if it moves out of bounds
 
                 else:
@@ -211,8 +211,10 @@ if __name__ == '__main__':
 
     # Initialize the frog and fly images
     frog_img = pygame.image.load('frog.png')
-    fly_img = pygame.image.load('fly.png')
-    special_fly_img = pygame.image.load('special_fly.png')
+    fly_img_left = pygame.image.load('fly_left_facing.png')
+    fly_img_right = pygame.image.load('fly_right_facing.png')
+    special_fly_img_left = pygame.image.load('special_fly_left_facing.png')
+    special_fly_img_right = pygame.image.load('special_fly_right_facing.png')
 
     # Define custom events for fly generation
     REGULAR_FLY_EVENT = pygame.USEREVENT + 1
@@ -222,4 +224,4 @@ if __name__ == '__main__':
     pygame.time.set_timer(REGULAR_FLY_EVENT, 2000)  # Regular flies every 2 seconds
     pygame.time.set_timer(SPECIAL_FLY_EVENT, 8000)  # Special flies every 8 seconds
 
-    create_game_loop(screen_manager, frog_img, fly_img, special_fly_img)
+    create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left, special_fly_img_right)
