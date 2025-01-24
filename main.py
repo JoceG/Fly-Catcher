@@ -5,6 +5,66 @@ from frog import Frog
 from screen_manager import ScreenManager
 from special_fly import SpecialFly
 
+def show_game_over_screen(screen, screen_width, screen_height):
+    game_over_text = "GAME OVER"
+    play_again_text = "Play Again"
+    exit_text = "Exit"
+
+    # Define fonts
+    font_large = pygame.font.Font(None, 80)
+    font_small = pygame.font.Font(None, 40)
+
+    # Render text
+    game_over_surface = font_large.render(game_over_text, True, (0, 0, 0))
+    play_again_surface = font_small.render(play_again_text, True, (255, 255, 255))
+    exit_surface = font_small.render(exit_text, True, (255, 255, 255))
+
+    # Text positions
+    game_over_pos = game_over_surface.get_rect(center=(screen_width // 2, screen_height // 3))
+    play_again_pos = play_again_surface.get_rect(center=(screen_width // 2, screen_height // 2))
+    exit_pos = exit_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 80))
+
+    # Button dimensions
+    play_again_button = pygame.Rect(screen_width // 2 - 100, screen_height // 2 - 25, 200, 50)
+    exit_button = pygame.Rect(screen_width // 2 - 100, screen_height // 2 + 55, 200, 50)
+
+    # Draw game over screen
+    screen.fill((243, 207, 198))  # Background color
+    screen.blit(game_over_surface, game_over_pos)
+
+    # Draw buttons
+    pygame.draw.rect(screen, (50, 150, 50), play_again_button)  # Green play button
+    pygame.draw.rect(screen, (200, 50, 50), exit_button)  # Red exit button
+
+    screen.blit(play_again_surface, play_again_pos)
+    screen.blit(exit_surface, exit_pos)
+
+    pygame.display.update()
+
+    return play_again_button, exit_button
+
+def game_over_loop(screen, screen_width, screen_height):
+    play_again_button, exit_button = show_game_over_screen(screen, screen_width, screen_height)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+
+            if event.type == pygame.VIDEORESIZE:
+                screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                show_game_over_screen(screen, event.w, event.h)  # Re-render with new size
+            
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if play_again_button.collidepoint(mouse_pos):
+                    return # Exit game over screen, restart game
+                    
+                elif exit_button.collidepoint(mouse_pos):
+                    pygame.quit()
+                    exit()
+    
 def draw_popups(score_popups):
     current_time = pygame.time.get_ticks()
     for popup in score_popups[:]:
@@ -81,14 +141,12 @@ def create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, spec
     # Set up a clock for a consistent frame rate
     clock = pygame.time.Clock()
     
-    running = True
-    game_over = False
-    
-    while running:
+    while True:
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                pygame.quit()
+                exit()
 
             # Generate a new fly when the timer event occurs
             if event.type == REGULAR_FLY_EVENT:
@@ -143,85 +201,79 @@ def create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, spec
                 if event.key == pygame.K_UP:
                     frog.movement['up'] = False
 
-        # Only proceed with game logic if still running
-        if running:
-            # Update the frog's position based on the movement states
-            frog.move(screen_manager)
-            
-            # Update the display (draw the frog at new position)
-            screen_manager.clear() # clear screen with the background color
-            frog.draw(screen_manager.screen)
+        # Update the frog's position based on the movement states
+        frog.move(screen_manager)
+        
+        # Update the display (draw the frog at new position)
+        screen_manager.clear() # clear screen with the background color
+        frog.draw(screen_manager.screen)
 
-            # Draw flies
-            for fly in flies:
-                if check_collision(frog, fly):
-                    flies.remove(fly)
+        # Draw flies
+        for fly in flies:
+            if check_collision(frog, fly):
+                flies.remove(fly)
 
-                    if isinstance(fly, SpecialFly):
-                        countdown_time += 25
-                    else:
-                        countdown_time += 5
-                    
-                    score += 1
-
-                    # Store the position and the time of the popup
-                    score_popups.append({
-                        "pos": (fly.x, fly.y),
-                        "time": pygame.time.get_ticks(),
-                        "special": isinstance(fly, SpecialFly)
-                    })
-
-                elif isinstance(fly, SpecialFly) and not fly.move():
-                    flies.remove(fly) # Remove the special fly if it moves out of bounds
-
+                if isinstance(fly, SpecialFly):
+                    countdown_time += 25
                 else:
-                    # Update the generic fly's position based on the movement states
-                    if not isinstance(fly, SpecialFly):
-                        fly.move()
-                    
-                    # Update the display (draw the fly at new position)
-                    fly.draw(screen_manager.screen)
-
-            # Draw the +5 popups
-            draw_popups(score_popups)
-
-            # Draw the score and time
-            elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
-            remaining_time = max(0, countdown_time - elapsed_time)
-            draw_score_and_time(screen_manager.screen, score, remaining_time)
-
-            if remaining_time == 0:
-                game_over = True
-                break
-
-            # Refresh display
-            pygame.display.flip()
-
-            # Limit the frame rate to 60 frames per second
-            clock.tick(60)
-
-    if game_over:
-        print("Time's up! Game over.")
-
-    pygame.quit()
+                    countdown_time += 5
                 
+                score += 1
+
+                # Store the position and the time of the popup
+                score_popups.append({
+                    "pos": (fly.x, fly.y),
+                    "time": pygame.time.get_ticks(),
+                    "special": isinstance(fly, SpecialFly)
+                })
+
+            elif isinstance(fly, SpecialFly) and not fly.move():
+                flies.remove(fly) # Remove the special fly if it moves out of bounds
+
+            else:
+                # Update the generic fly's position based on the movement states
+                if not isinstance(fly, SpecialFly):
+                    fly.move()
+                
+                # Update the display (draw the fly at new position)
+                fly.draw(screen_manager.screen)
+
+        # Draw the +5 popups
+        draw_popups(score_popups)
+
+        # Draw the score and time
+        elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
+        remaining_time = max(0, countdown_time - elapsed_time)
+        draw_score_and_time(screen_manager.screen, score, remaining_time)
+
+        # Refresh display
+        pygame.display.flip()
+
+        # Limit the frame rate to 60 frames per second
+        clock.tick(60)
+
+        if remaining_time == 0:
+            game_over_loop(screen_manager.screen, screen_manager.width, screen_manager.height)
+            return
+
 if __name__ == '__main__':
-    # Initialize the ScreenManger
-    screen_manager = ScreenManager()
+    while True:
+        # Initialize the ScreenManger
+        screen_manager = ScreenManager()
 
-    # Initialize the frog and fly images
-    frog_img = pygame.image.load('frog.png')
-    fly_img_left = pygame.image.load('fly_left_facing.png')
-    fly_img_right = pygame.image.load('fly_right_facing.png')
-    special_fly_img_left = pygame.image.load('special_fly_left_facing.png')
-    special_fly_img_right = pygame.image.load('special_fly_right_facing.png')
+        # Initialize the frog and fly images
+        frog_img = pygame.image.load('frog.png')
+        fly_img_left = pygame.image.load('fly_left_facing.png')
+        fly_img_right = pygame.image.load('fly_right_facing.png')
+        special_fly_img_left = pygame.image.load('special_fly_left_facing.png')
+        special_fly_img_right = pygame.image.load('special_fly_right_facing.png')
 
-    # Define custom events for fly generation
-    REGULAR_FLY_EVENT = pygame.USEREVENT + 1
-    SPECIAL_FLY_EVENT = pygame.USEREVENT + 2
+        # Define custom events for fly generation
+        REGULAR_FLY_EVENT = pygame.USEREVENT + 1
+        SPECIAL_FLY_EVENT = pygame.USEREVENT + 2
 
-    # Set timers for regular and special flies
-    pygame.time.set_timer(REGULAR_FLY_EVENT, 2000)  # Regular flies every 2 seconds
-    pygame.time.set_timer(SPECIAL_FLY_EVENT, 8000)  # Special flies every 8 seconds
-
-    create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left, special_fly_img_right)
+        # Set timers for regular and special flies
+        pygame.time.set_timer(REGULAR_FLY_EVENT, 2000)  # Regular flies every 2 seconds
+        pygame.time.set_timer(SPECIAL_FLY_EVENT, 8000)  # Special flies every 8 seconds
+    
+        create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left, special_fly_img_right)
