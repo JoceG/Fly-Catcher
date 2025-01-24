@@ -5,6 +5,23 @@ from frog import Frog
 from screen_manager import ScreenManager
 from special_fly import SpecialFly
 
+# Define custom events for fly generation
+FLY_SPAWN = pygame.USEREVENT + 1
+SPECIAL_FLY_SPAWN = pygame.USEREVENT + 2
+
+# Load frog and fly images
+FROG = pygame.image.load('frog.png')
+FLY_LEFT = pygame.image.load('fly_left_facing.png')
+FLY_RIGHT = pygame.image.load('fly_right_facing.png')
+SPECIAL_FLY_LEFT = pygame.image.load('special_fly_left_facing.png')
+SPECIAL_FLY_RIGHT = pygame.image.load('special_fly_right_facing.png')
+
+# Fixed game configurations
+GAME_DURATION = 120  # Game time in seconds (2 minutes)
+INITIAL_FLY_COUNT = 5
+FLY_WIDTH = 30.0
+FLY_HEIGHT = 30.0
+
 def show_game_over_screen(screen, screen_width, screen_height):
     game_over_text = "GAME OVER"
     play_again_text = "Play Again"
@@ -109,37 +126,36 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
-def create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left,
-                     special_fly_img_right, initial_fly_count=5):
+def create_game_loop(screen_manager, initial_fly_count=5):
     """
     Runs the game loop, handling events and updating the display.
     
     Args:
         screen_manager (ScreenManager): The ScreenManager instance to handle screen resizing and updates.
     """
-    # Timer starts here when the loop begins
+    # Start the timer for the game
     start_time = pygame.time.get_ticks()
 
-    # Time given (2 minutes)
-    countdown_time = 120
+    # Set up the clock to maintain a consistent frame rate
+    clock = pygame.time.Clock()
 
-    # Store active pop-ups
-    score_popups = []
-    
-    # Create the Frog instance
-    frog = Frog(screen_manager.width / 2, screen_manager.height / 2, frog_img)
-    
+    # Set countdown timer to the game duration
+    countdown_time = GAME_DURATION
+
     # Number of flies the frog has eaten
     score = 0
+
+    # List to store active pop-ups
+    score_popups = []
+
+    # Use constants for initial fly sizes, can be updated dynamically
+    fly_width, fly_height = FLY_WIDTH, FLY_HEIGHT
     
-    # List to store flies
-    flies = [Fly(screen_manager.width, screen_manager.height, fly_img_left, fly_img_right) for i in range(initial_fly_count)]
+    # List to store fly objects, initialized with the specified number of flies (INITIAL_FLY_COUNT)
+    flies = [Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT) for i in range(INITIAL_FLY_COUNT)]
 
-    # Set initial size of the flies (using floats for precision)
-    fly_width, fly_height = 30.0, 30.0
-
-    # Set up a clock for a consistent frame rate
-    clock = pygame.time.Clock()
+    # Create the Frog instance at the center of the screen
+    frog = Frog(screen_manager.width / 2, screen_manager.height / 2, FROG)
     
     while True:
         # Handle events
@@ -149,13 +165,13 @@ def create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, spec
                 exit()
 
             # Generate a new fly when the timer event occurs
-            if event.type == REGULAR_FLY_EVENT:
-                flies.append(Fly(screen_manager.width, screen_manager.height, fly_img_left, fly_img_right, fly_width, fly_height))
+            if event.type == FLY_SPAWN:
+                flies.append(Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT, fly_width, fly_height))
 
-            if event.type == SPECIAL_FLY_EVENT:
+            if event.type == SPECIAL_FLY_SPAWN:
                 # Occasionally spawn a special fly with a 30% chance
                 #if random.random() < 0.3:
-                flies.append(SpecialFly(screen_manager.width, screen_manager.height, special_fly_img_left, special_fly_img_right, fly_width, fly_height))
+                flies.append(SpecialFly(screen_manager.width, screen_manager.height, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
                 # Get the new width and height from the resize event
@@ -261,19 +277,8 @@ if __name__ == '__main__':
         # Initialize the ScreenManger
         screen_manager = ScreenManager()
 
-        # Initialize the frog and fly images
-        frog_img = pygame.image.load('frog.png')
-        fly_img_left = pygame.image.load('fly_left_facing.png')
-        fly_img_right = pygame.image.load('fly_right_facing.png')
-        special_fly_img_left = pygame.image.load('special_fly_left_facing.png')
-        special_fly_img_right = pygame.image.load('special_fly_right_facing.png')
-
-        # Define custom events for fly generation
-        REGULAR_FLY_EVENT = pygame.USEREVENT + 1
-        SPECIAL_FLY_EVENT = pygame.USEREVENT + 2
-
         # Set timers for regular and special flies
-        pygame.time.set_timer(REGULAR_FLY_EVENT, 2000)  # Regular flies every 2 seconds
-        pygame.time.set_timer(SPECIAL_FLY_EVENT, 8000)  # Special flies every 8 seconds
-    
-        create_game_loop(screen_manager, frog_img, fly_img_left, fly_img_right, special_fly_img_left, special_fly_img_right)
+        pygame.time.set_timer(FLY_SPAWN, 2000)  # Regular flies every 2 seconds
+        pygame.time.set_timer(SPECIAL_FLY_SPAWN, 8000)  # Special flies every 8 seconds
+
+        create_game_loop(screen_manager)
