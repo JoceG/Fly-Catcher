@@ -126,7 +126,7 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
-def create_game_loop(screen_manager, initial_fly_count=5):
+def create_game_loop(screen_manager):
     """
     Runs the game loop, handling events and updating the display.
     
@@ -164,13 +164,12 @@ def create_game_loop(screen_manager, initial_fly_count=5):
                 pygame.quit()
                 exit()
 
-            # Generate a new fly when the timer event occurs
+            # Spawn a fly when the timer event occurs
             if event.type == FLY_SPAWN:
                 flies.append(Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT, fly_width, fly_height))
 
+            # Spawn a special fly when the timer event occurs
             if event.type == SPECIAL_FLY_SPAWN:
-                # Occasionally spawn a special fly with a 30% chance
-                #if random.random() < 0.3:
                 flies.append(SpecialFly(screen_manager.width, screen_manager.height, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT, fly_width, fly_height))
                 
             if event.type == pygame.VIDEORESIZE:
