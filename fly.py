@@ -16,6 +16,7 @@ class Fly:
         self.original_img_left = fly_img_left
         self.original_img_right = fly_img_right
         self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
+        self.facing_left = True
 
         # Random initial position
         self.x = random.randint(0, int(screen_width) - int(self.width))
@@ -77,8 +78,10 @@ class Fly:
         """
         if self.movement["left"]:
             self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
+            self.facing_left = True
         if self.movement["right"]:
             self.img = pygame.transform.scale(self.original_img_right, (int(self.width), int(self.height)))
+            self.facing_left = False
         
     def move(self):
         """
@@ -177,7 +180,11 @@ class Fly:
         """
         self.width *= width_scale
         self.height *= height_scale
-        self.img = pygame.transform.scale(self.original_img, (int(self.width), int(self.height)))
+
+        if self.facing_left:
+            self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
+        else:
+            self.img = pygame.transform.scale(self.original_img_right, (int(self.width), int(self.height)))
 
     def reposition(self, width_scale, height_scale):
         """
