@@ -1,5 +1,6 @@
 import pygame
 import pytest
+from constants import FLY_LEFT, FLY_RIGHT
 from fly import Fly
 
 @pytest.fixture
@@ -8,8 +9,7 @@ def fly():
     Fixture to create a Fly instance with default size and random position.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
-    fly_img = pygame.image.load('fly.png') # Load the fly image
-    return Fly(screen_width=500, screen_height=500, fly_img=fly_img)
+    return Fly(screen_width=500, screen_height=500, fly_img_left=FLY_LEFT, fly_img_right=FLY_RIGHT)
 
 def test_initialization(fly):
     """

@@ -1,5 +1,6 @@
 import pygame
 import pytest
+from constants import FROG
 from frog import Frog
 from screen_manager import ScreenManager
 
@@ -16,8 +17,7 @@ def frog():
     Fixture to create a Frog instance with default values.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
-    frog_img = pygame.image.load('frog.png') # Load the frog image
-    return Frog(x=250.0, y=250.0, frog_img=frog_img)
+    return Frog(x=250.0, y=250.0, frog_img=FROG)
 
 def test_initialization(frog):
     """

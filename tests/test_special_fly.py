@@ -1,5 +1,6 @@
 import pygame
 import pytest
+from constants import SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
 from special_fly import SpecialFly
 
 @pytest.fixture
@@ -8,8 +9,7 @@ def fly():
     Fixture to create a SpecialFly instance with default size and random position.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
-    special_fly_img = pygame.image.load('special_fly.png') # Load the fly image
-    return SpecialFly(screen_width=500, screen_height=500, special_fly_img=special_fly_img)
+    return SpecialFly(screen_width=500, screen_height=500, special_fly_img_left=SPECIAL_FLY_LEFT, special_fly_img_right=SPECIAL_FLY_RIGHT)
 
 def test_initialization(fly):
     """
