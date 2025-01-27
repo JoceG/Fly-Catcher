@@ -22,6 +22,9 @@ INITIAL_FLY_COUNT = 5
 FLY_WIDTH = 30.0
 FLY_HEIGHT = 30.0
 
+# Use global variables for initial fly sizes, can be updated dynamically
+fly_width, fly_height = FLY_WIDTH, FLY_HEIGHT
+
 def show_game_over_screen(screen, screen_width, screen_height):
     game_over_text = "GAME OVER"
     play_again_text = "Play Again"
@@ -82,7 +85,7 @@ def game_over_loop(screen, screen_width, screen_height):
                     pygame.quit()
                     exit()
     
-def draw_popups(score_popups):
+def draw_popups(score_popups, screen_manager):
     current_time = pygame.time.get_ticks()
     for popup in score_popups[:]:
         if current_time - popup["time"] < 1000:  # Show for 1 second
@@ -126,6 +129,90 @@ def check_collision(frog, fly):
     fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
     return frog_rect.colliderect(fly_rect)
 
+def handle_resize(event, screen_manager, frog, flies):
+    global fly_width, fly_height
+    new_width, new_height = event.w, event.h
+    screen_manager.resize(new_width, new_height)
+    width_scale, height_scale = screen_manager.get_scaling_factors()
+
+    # Update the frog's position and size relative to the new screen size
+    frog.resize(width_scale, height_scale)
+    frog.reposition(width_scale, height_scale)
+
+    # Update the flies' size relative to the new screen size
+    fly_width *= width_scale
+    fly_height *= height_scale
+
+    # Update each fly's position and size relative to the new screen size
+    for fly in flies:
+        fly.resize(width_scale, height_scale)
+        fly.reposition(width_scale, height_scale)
+
+def handle_key_event(event, frog, is_pressed):
+    if event.key == pygame.K_LEFT:
+        frog.movement['left'] = is_pressed
+    if event.key == pygame.K_RIGHT:
+        frog.movement['right'] = is_pressed
+    if event.key == pygame.K_DOWN:
+        frog.movement['down'] = is_pressed
+    if event.key == pygame.K_UP:
+        frog.movement['up'] = is_pressed
+
+def handle_events(frog, flies, screen_manager):
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+        # Spawn a fly when the timer event occurs
+        if event.type == FLY_SPAWN:
+            flies.append(Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT, fly_width, fly_height))
+
+        # Spawn a special fly when the timer event occurs
+        if event.type == SPECIAL_FLY_SPAWN:
+            flies.append(SpecialFly(screen_manager.width, screen_manager.height, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT, fly_width, fly_height))
+            
+        if event.type == pygame.VIDEORESIZE:
+            handle_resize(event, screen_manager, frog, flies)
+
+        if event.type == pygame.KEYDOWN:
+            handle_key_event(event, frog, True)
+                
+        elif event.type == pygame.KEYUP:
+            handle_key_event(event, frog, False)
+
+def draw_flies(flies, frog, screen_manager, countdown_time, score, score_popups):
+    for fly in flies:
+        if check_collision(frog, fly):
+            flies.remove(fly)
+
+            if isinstance(fly, SpecialFly):
+                countdown_time += 25
+            else:
+                countdown_time += 5
+            
+            score += 1
+
+            # Store the position and the time of the popup
+            score_popups.append({
+                "pos": (fly.x, fly.y),
+                "time": pygame.time.get_ticks(),
+                "special": isinstance(fly, SpecialFly)
+            })
+
+        elif isinstance(fly, SpecialFly) and not fly.move():
+            flies.remove(fly) # Remove the special fly if it moves out of bounds
+
+        else:
+            # Update the generic fly's position based on the movement states
+            if not isinstance(fly, SpecialFly):
+                fly.move()
+            
+            # Update the display (draw the fly at new position)
+            fly.draw(screen_manager.screen)
+
+    return countdown_time, score
+
 def create_game_loop(screen_manager):
     """
     Runs the game loop, handling events and updating the display.
@@ -147,9 +234,6 @@ def create_game_loop(screen_manager):
 
     # List to store active pop-ups
     score_popups = []
-
-    # Use constants for initial fly sizes, can be updated dynamically
-    fly_width, fly_height = FLY_WIDTH, FLY_HEIGHT
     
     # List to store fly objects, initialized with the specified number of flies (INITIAL_FLY_COUNT)
     flies = [Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT) for i in range(INITIAL_FLY_COUNT)]
@@ -158,63 +242,7 @@ def create_game_loop(screen_manager):
     frog = Frog(screen_manager.width / 2, screen_manager.height / 2, FROG)
     
     while True:
-        # Handle events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-
-            # Spawn a fly when the timer event occurs
-            if event.type == FLY_SPAWN:
-                flies.append(Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT, fly_width, fly_height))
-
-            # Spawn a special fly when the timer event occurs
-            if event.type == SPECIAL_FLY_SPAWN:
-                flies.append(SpecialFly(screen_manager.width, screen_manager.height, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT, fly_width, fly_height))
-                
-            if event.type == pygame.VIDEORESIZE:
-                # Get the new width and height from the resize event
-                new_width, new_height = event.w, event.h
-
-                # Resize the screen via ScreenManager
-                screen_manager.resize(new_width, new_height)
-
-                # Get the scaling factor to adjust the game elements based on the new screen size
-                # The scaling factor ensures that the frog's position and size are proportional to the new screen size
-                width_scale, height_scale = screen_manager.get_scaling_factors()
-
-                # Update the frog's position and size relative to the new screen size
-                frog.resize(width_scale, height_scale)
-                frog.reposition(width_scale, height_scale)
-
-                # Update the flies' size relative to the new screen size
-                fly_width *= width_scale
-                fly_height *= height_scale
-
-                # Update each fly's position and size relative to the new screen size
-                for fly in flies:
-                    fly.resize(width_scale, height_scale)
-                    fly.reposition(width_scale, height_scale)
-
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    frog.movement['left'] = True
-                if event.key == pygame.K_RIGHT:
-                    frog.movement['right'] = True
-                if event.key == pygame.K_DOWN:
-                    frog.movement['down'] = True
-                if event.key == pygame.K_UP:
-                    frog.movement['up'] = True
-                    
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    frog.movement['left'] = False
-                if event.key == pygame.K_RIGHT:
-                    frog.movement['right'] = False
-                if event.key == pygame.K_DOWN:
-                    frog.movement['down'] = False
-                if event.key == pygame.K_UP:
-                    frog.movement['up'] = False
+        handle_events(frog, flies, screen_manager)
 
         # Update the frog's position based on the movement states
         frog.move(screen_manager)
@@ -224,37 +252,10 @@ def create_game_loop(screen_manager):
         frog.draw(screen_manager.screen)
 
         # Draw flies
-        for fly in flies:
-            if check_collision(frog, fly):
-                flies.remove(fly)
-
-                if isinstance(fly, SpecialFly):
-                    countdown_time += 25
-                else:
-                    countdown_time += 5
-                
-                score += 1
-
-                # Store the position and the time of the popup
-                score_popups.append({
-                    "pos": (fly.x, fly.y),
-                    "time": pygame.time.get_ticks(),
-                    "special": isinstance(fly, SpecialFly)
-                })
-
-            elif isinstance(fly, SpecialFly) and not fly.move():
-                flies.remove(fly) # Remove the special fly if it moves out of bounds
-
-            else:
-                # Update the generic fly's position based on the movement states
-                if not isinstance(fly, SpecialFly):
-                    fly.move()
-                
-                # Update the display (draw the fly at new position)
-                fly.draw(screen_manager.screen)
+        countdown_time, score = draw_flies(flies, frog, screen_manager, countdown_time, score, score_popups)
 
         # Draw the +5 popups
-        draw_popups(score_popups)
+        draw_popups(score_popups, screen_manager)
 
         # Draw the score and time
         elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
