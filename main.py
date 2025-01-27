@@ -182,7 +182,7 @@ def handle_events(frog, flies, screen_manager):
             handle_key_event(event, frog, False)
 
 def draw_flies(flies, frog, screen_manager, countdown_time, score, score_popups):
-    for fly in flies:
+    for fly in flies[:]:
         if check_collision(frog, fly):
             flies.remove(fly)
 
