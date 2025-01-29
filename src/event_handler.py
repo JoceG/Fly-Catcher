@@ -75,8 +75,8 @@ def handle_events(game_state, screen_manager):
 
         # Spawn a special fly when the timer event occurs
         if event.type == SPECIAL_FLY_SPAWN:
-            flies.append(SpecialFly(screen_manager.width, screen_manager.height, SPECIAL_FLY_LEFT,
-                                    SPECIAL_FLY_RIGHT, game_state.fly_width, game_state.fly_height))
+            flies.append(SpecialFly(screen_manager.width, screen_manager.height,
+                                    game_state.fly_width, game_state.fly_height))
             
         if event.type == pygame.VIDEORESIZE:
             handle_resize(event, game_state, screen_manager, frog, flies)
