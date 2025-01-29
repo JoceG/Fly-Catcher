@@ -13,7 +13,7 @@ class SpecialFly(Fly):
         self.x = random.randint(screen_width // 4, 3 * screen_width // 4)  # Random position in the middle third of the screen
         self.y = random.randint(screen_height // 4, 3 * screen_height // 4)  # Random position in the middle third of the screen
 
-    def move(self):
+    def move(self, screen_width, screen_height):
         """
         Moves the fly and returns boolean indicating whether the fly is still on the screen.
         """
@@ -31,7 +31,7 @@ class SpecialFly(Fly):
             return False
 
         # Check if the fly is past the right edge
-        if self.x >= self.screen_width:  # The left edge of the fly is off the right side
+        if self.x >= screen_width:  # The left edge of the fly is off the right side
             return False
 
         # Check if the fly is past the top edge
@@ -39,7 +39,7 @@ class SpecialFly(Fly):
             return False
 
         # Check if the fly is past the bottom edge
-        if self.y >= self.screen_height:  # The top edge of the fly is off the bottom side
+        if self.y >= screen_height:  # The top edge of the fly is off the bottom side
             return False
 
         return True

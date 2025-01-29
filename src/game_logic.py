@@ -42,7 +42,7 @@ def update_frog_and_flies(game_state, screen_width, screen_height):
                 "time": pygame.time.get_ticks(),
                 "special": isinstance(fly, SpecialFly)
             })
-        elif isinstance(fly, SpecialFly) and not fly.move():
+        elif isinstance(fly, SpecialFly) and not fly.move(screen_width, screen_height):
             # Remove special flies that move out of screen boundaries
             game_state.flies.remove(fly) 
 

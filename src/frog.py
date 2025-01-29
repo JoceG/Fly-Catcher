@@ -17,15 +17,15 @@ class Frog:
         self.original_img = frog_img
         self.img = pygame.transform.scale(self.original_img, (int(self.width), int(self.height)))
 
-    def move(self, screen_manager):
+    def move(self, screen_width, screen_height):
         """
         Updates the frog's position based on movement states
         """
         if self.movement['left'] and self.x > 0:
             self.x -= self.speed
-        if self.movement['right'] and self.x + self.width < screen_manager.width: 
+        if self.movement['right'] and self.x + self.width < screen_width: 
             self.x += self.speed
-        if self.movement['down'] and self.y + self.height < screen_manager.height:
+        if self.movement['down'] and self.y + self.height < screen_height:
             self.y += self.speed
         if self.movement['up'] and self.y > 0:
             self.y -= self.speed

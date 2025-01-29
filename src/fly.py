@@ -22,9 +22,6 @@ class Fly:
         self.x = random.randint(0, int(screen_width) - int(self.width))
         self.y = random.randint(0, int(screen_height) - int(self.height))
 
-        self.screen_width = screen_width  # Store screen width
-        self.screen_height = screen_height  # Store screen height
-
         # Initialize random direction movement dictionary
         self.movement = {
             "left": random.choice([True, False]),
@@ -83,7 +80,7 @@ class Fly:
             self.img = pygame.transform.scale(self.original_img_right, (int(self.width), int(self.height)))
             self.facing_left = False
         
-    def move(self):
+    def move(self, screen_width, screen_height):
         """
         Moves the fly and changes direction if it hits the edge.
         """
@@ -97,12 +94,12 @@ class Fly:
             self.y += self.speed
 
         # Check edges and change direction
-        self.check_edges()
+        self.check_edges(screen_width, screen_height)
 
         # Set the right fly image
         self.set_fly_image()
 
-    def check_edges(self):
+    def check_edges(self, screen_width, screen_height):
         """
         Checks if the fly is near an edge and changes its direction.
         """
@@ -124,7 +121,7 @@ class Fly:
                 self.movement[direction] = True
 
         # Check if the fly is near the right edge
-        if self.x >= self.screen_width - self.width:
+        if self.x >= screen_width - self.width:
             self.movement["left"] = random.choice([True, False])
             self.movement["right"] = False
             self.movement["up"] = random.choice([True, False])
@@ -158,7 +155,7 @@ class Fly:
                 self.movement[direction] = True
 
         # Check if the fly is near the bottom edge
-        if self.y >= self.screen_height - self.height:
+        if self.y >= screen_height - self.height:
             self.movement["left"] = random.choice([True, False])
             self.movement["right"] = random.choice([True, False])
             self.movement["up"] = random.choice([True, False])
