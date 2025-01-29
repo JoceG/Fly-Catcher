@@ -17,6 +17,4 @@ INITIAL_FLY_COUNT = 5
 FLY_WIDTH = 30.0
 FLY_HEIGHT = 30.0
 
-# Use global variables for initial fly sizes, can be updated dynamically
-fly_width, fly_height = FLY_WIDTH, FLY_HEIGHT
 

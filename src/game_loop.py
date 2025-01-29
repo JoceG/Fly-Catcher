@@ -30,7 +30,7 @@ def create_game_loop(screen_manager, game_state):
     clock = pygame.time.Clock()
     
     while True:
-        handle_events(game_state.frog, game_state.flies, screen_manager)
+        handle_events(game_state, screen_manager)
         update_frog_and_flies(game_state, screen_manager.width, screen_manager.height)
         draw_game_objects(game_state, screen_manager, start_time)
         pygame.display.flip() # Refresh display
