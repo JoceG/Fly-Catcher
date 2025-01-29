@@ -1,7 +1,8 @@
 import pygame
 from event_handler import handle_events
+from game_logic import update_frog_and_flies
 from game_over import game_over_loop
-from game_renderer import draw_game_objects
+from ui_renderer import draw_game_objects
 
 def is_time_up(start_time, countdown_time):
     """
@@ -30,7 +31,7 @@ def create_game_loop(screen_manager, game_state):
     
     while True:
         handle_events(game_state.frog, game_state.flies, screen_manager)
-        game_state.frog.move(screen_manager)
+        update_frog_and_flies(game_state, screen_manager.width, screen_manager.height)
         draw_game_objects(game_state, screen_manager, start_time)
         pygame.display.flip() # Refresh display
         clock.tick(60) # Limit frame rate
