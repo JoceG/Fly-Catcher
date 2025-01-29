@@ -1,4 +1,4 @@
-from constants import FROG, FLY_LEFT, FLY_RIGHT, FLY_WIDTH, FLY_HEIGHT, GAME_DURATION, INITIAL_FLY_COUNT
+from constants import FROG, FLY_WIDTH, FLY_HEIGHT, GAME_DURATION, INITIAL_FLY_COUNT
 from fly import Fly
 from frog import Frog
 
@@ -28,6 +28,6 @@ class GameState:
 
         # Reset game entities
         self.frog = Frog(screen_width / 2, screen_height / 2, FROG)
-        self.flies = [Fly(screen_width, screen_height, FLY_LEFT, FLY_RIGHT) for _ in range(INITIAL_FLY_COUNT)]
+        self.flies = [Fly(screen_width, screen_height) for _ in range(INITIAL_FLY_COUNT)]
 
        

@@ -1,11 +1,17 @@
 import random
 import pygame
+from constants import FLY_LEFT, FLY_RIGHT
 
 class Fly:
-    def __init__(self, screen_width, screen_height, fly_img_left, fly_img_right, width=30.0, height=30.0, speed=2):
+    def __init__(self, screen_width, screen_height, fly_img_left=FLY_LEFT, fly_img_right=FLY_RIGHT, width=30.0, height=30.0, speed=2):
         """
         Initialize the fly with default size and color and random position.
         """
+        self.original_img_left = fly_img_left
+        self.original_img_right = fly_img_right
+        self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
+        self.facing_left = True
+        
         # Dimensions of the fly
         self.width = width
         self.height = height
@@ -13,14 +19,9 @@ class Fly:
         # Speed of the fly
         self.speed = speed
 
-        self.original_img_left = fly_img_left
-        self.original_img_right = fly_img_right
-        self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
-        self.facing_left = True
-
         # Random initial position
-        self.x = random.randint(0, int(screen_width) - int(self.width))
-        self.y = random.randint(0, int(screen_height) - int(self.height))
+        self.x = random.randint(0, int(screen_width) - int(width))
+        self.y = random.randint(0, int(screen_height) - int(height))
 
         # Initialize random direction movement dictionary
         self.movement = {
@@ -75,30 +76,11 @@ class Fly:
         """
         if self.movement["left"]:
             self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
-            self.facing_left = True
-        if self.movement["right"]:
+            self.facing_left = True  
+        elif self.movement["right"]:
             self.img = pygame.transform.scale(self.original_img_right, (int(self.width), int(self.height)))
             self.facing_left = False
         
-    def move(self, screen_width, screen_height):
-        """
-        Moves the fly and changes direction if it hits the edge.
-        """
-        if self.movement["left"]:
-            self.x -= self.speed
-        if self.movement["right"]:
-            self.x += self.speed
-        if self.movement["up"]:
-            self.y -= self.speed
-        if self.movement["down"]:
-            self.y += self.speed
-
-        # Check edges and change direction
-        self.check_edges(screen_width, screen_height)
-
-        # Set the right fly image
-        self.set_fly_image()
-
     def check_edges(self, screen_width, screen_height):
         """
         Checks if the fly is near an edge and changes its direction.
@@ -170,6 +152,26 @@ class Fly:
             if not any([self.movement["left"], self.movement["right"], self.movement["up"]]):
                 direction = random.choice(["left", "right", "up"])
                 self.movement[direction] = True
+
+    def move(self, screen_width, screen_height):
+        """
+        Moves the fly and changes direction if it hits the edge.
+        """
+        if self.movement["left"]:
+            self.x -= self.speed  
+        elif self.movement["right"]:
+            self.x += self.speed
+            
+        if self.movement["up"]:
+            self.y -= self.speed 
+        elif self.movement["down"]:
+            self.y += self.speed
+
+        # Check edges and change direction
+        self.check_edges(screen_width, screen_height)
+
+        # Set the correct fly image
+        self.set_fly_image()
 
     def resize(self, width_scale, height_scale):
         """

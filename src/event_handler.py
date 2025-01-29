@@ -1,5 +1,5 @@
 import pygame
-from constants import FLY_SPAWN, SPECIAL_FLY_SPAWN, FLY_LEFT, FLY_RIGHT, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
+from constants import FLY_SPAWN, SPECIAL_FLY_SPAWN, SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
 from fly import Fly
 from special_fly import SpecialFly
 
@@ -70,7 +70,7 @@ def handle_events(game_state, screen_manager):
 
         # Spawn a fly when the timer event occurs
         if event.type == FLY_SPAWN:
-            flies.append(Fly(screen_manager.width, screen_manager.height, FLY_LEFT, FLY_RIGHT,
+            flies.append(Fly(screen_manager.width, screen_manager.height,
                              game_state.fly_width, game_state.fly_height))
 
         # Spawn a special fly when the timer event occurs
