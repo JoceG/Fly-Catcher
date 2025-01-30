@@ -1,4 +1,5 @@
 import pygame
+from constants import BLACK_COLOR, GOLD_COLOR, GRAY_COLOR
 
 def draw_flies(game_state, screen):
     """
@@ -24,15 +25,12 @@ def draw_popups(score_popups, screen):
     """
     current_time = pygame.time.get_ticks()
     font = pygame.font.Font(None, 30)
-
-    gold_color = (255, 223, 0)  # Color for special popups
-    gray_color = (169, 169, 169)  # Color for regular popups
-
+    
     active_popups = []  # Collect active popups to update the list for the next frame
 
     for popup in score_popups:
         if current_time - popup["time"] < 1000:  # Show for 1 second
-            color = gold_color if popup["special"] else gray_color
+            color = GOLD_COLOR if popup["special"] else GRAY_COLOR
             text = font.render("+25s" if popup["special"] else "+5s", True, color)
             screen.blit(text, (popup["pos"][0], popup["pos"][1] - 20))
             active_popups.append(popup)  # Keep active popups
@@ -54,12 +52,12 @@ def draw_score_and_time(screen, score, time_remaining):
     seconds = time_remaining % 60
 
     # Render the score text
-    score_text = font.render(f"Score: {score}", True, (0, 0, 0))
+    score_text = font.render(f"Score: {score}", True, BLACK_COLOR)
     score_width = score_text.get_width()
     screen.blit(score_text, (score_x_position, 10))  # Display score at position (10, 10)
 
     # Render the time remaining text
-    time_text = font.render(f"{minutes:02}:{seconds:02}", True, (0, 0, 0))  # Format time as MM:SS
+    time_text = font.render(f"{minutes:02}:{seconds:02}", True, BLACK_COLOR)  # Format time as MM:SS
     time_width = time_text.get_width()
 
     # Calculate x-coordinate to center the time text under the score

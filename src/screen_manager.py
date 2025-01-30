@@ -1,20 +1,16 @@
 import pygame
+from constants import INITIAL_SCREEN_WIDTH, INITIAL_SCREEN_HEIGHT, BACKGROUND_COLOR
 
 class ScreenManager:
-    def __init__(self, width=500, height=500, background_color=(243, 207, 198)):
+    def __init__(self):
         """
         Initializes the screen manager with default values.
-
-        Args:
-            width (int, optional): Initial width of the screen. Defaults to 500.
-            height (int, optional): Initial height of the screen. Defaults to 500.
-            background_color (tuple, optional): RGB color for the background. Defaults to (243, 207, 198).
         """
-        self.width = width
-        self.height = height
-        self.previous_width = width
-        self.previous_height = height
-        self.background_color = background_color
+        self.width = INITIAL_SCREEN_WIDTH
+        self.height = INITIAL_SCREEN_HEIGHT
+        self.previous_width = self.width
+        self.previous_height = self.height
+        self.background_color = BACKGROUND_COLOR
         self.screen = None
         self.initialize_screen()
 
