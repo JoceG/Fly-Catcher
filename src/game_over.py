@@ -1,42 +1,77 @@
+import pygame
+
 def show_game_over_screen(screen, screen_width, screen_height):
-    game_over_text = "GAME OVER"
-    play_again_text = "Play Again"
-    exit_text = "Exit"
+    """
+    Displays the game over screen with options to play again or exit.
 
-    # Define fonts
-    font_large = pygame.font.Font(None, 80)
-    font_small = pygame.font.Font(None, 40)
+    Args:
+        screen (pygame.Surface): The game screen where elements will be drawn.
+        screen_width (int): The width of the game screen.
+        screen_height (int): The height of the game screen.
 
-    # Render text
-    game_over_surface = font_large.render(game_over_text, True, (0, 0, 0))
-    play_again_surface = font_small.render(play_again_text, True, (255, 255, 255))
-    exit_surface = font_small.render(exit_text, True, (255, 255, 255))
+    Returns:
+        tuple: (play_again_button, exit_button), pygame.Rect objects representing 
+               the interactive button areas.
+    """
+    screen.fill((243, 207, 198)) # Background color
 
-    # Text positions
+    game_over_surface = render_text("GAME OVER", 80, (0, 0, 0))
     game_over_pos = game_over_surface.get_rect(center=(screen_width // 2, screen_height // 3))
-    play_again_pos = play_again_surface.get_rect(center=(screen_width // 2, screen_height // 2))
-    exit_pos = exit_surface.get_rect(center=(screen_width // 2, screen_height // 2 + 80))
-
-    # Button dimensions
-    play_again_button = pygame.Rect(screen_width // 2 - 100, screen_height // 2 - 25, 200, 50)
-    exit_button = pygame.Rect(screen_width // 2 - 100, screen_height // 2 + 55, 200, 50)
-
-    # Draw game over screen
-    screen.fill((243, 207, 198))  # Background color
     screen.blit(game_over_surface, game_over_pos)
 
-    # Draw buttons
-    pygame.draw.rect(screen, (50, 150, 50), play_again_button)  # Green play button
-    pygame.draw.rect(screen, (200, 50, 50), exit_button)  # Red exit button
-
-    screen.blit(play_again_surface, play_again_pos)
-    screen.blit(exit_surface, exit_pos)
+    # Draw buttons and return their Rect objects
+    play_again_button = draw_button(screen, "Play Again", (screen_width // 2, screen_height // 2), (50, 150, 50))
+    exit_button = draw_button(screen, "Exit", (screen_width // 2, screen_height // 2 + 80), (200, 50, 50))
 
     pygame.display.update()
 
     return play_again_button, exit_button
 
+def render_text(text, font_size, color):
+    """
+    Renders text as a Pygame surface.
+
+    Args:
+        text (str): The text to render.
+        font_size (int): The size of the font.
+        color (tuple): RGB color of the text.
+
+    Returns:
+        pygame.Surface: The rendered text surface.
+    """
+    font = pygame.font.Font(None, font_size)
+    return font.render(text, True, color)
+
+def draw_button(screen, text, center_pos, color):
+    """
+    Draws a button with centered text.
+
+    Args:
+        screen (pygame.Surface): The game screen to draw on.
+        text (str): The button text.
+        center_pos (tuple): (x, y) position for centering the button.
+        color (tuple): RGB color of the button.
+
+    Returns:
+        pygame.Rect: The rectangle representing the button area.
+    """
+    font = pygame.font.Font(None, 40)
+    text_surface = font.render(text, True, (255, 255, 255))
+    text_rect = text_surface.get_rect(center=center_pos)
+
+    button_rect = pygame.Rect(center_pos[0] - 100, center_pos[1] - 25, 200, 50)
+    pygame.draw.rect(screen, color, button_rect)
+    screen.blit(text_surface, text_rect)
+
+    return button_rect
+
 def game_over(screen_manager):
+    """
+    Handles the game over screen, allowing the player to restart or exit.
+
+    Args:
+        screen_manager: An instance of ScreenManager that manages the game screen.
+    """
     screen = screen_manager.screen
     screen_width = screen_manager.width
     screen_height = screen_manager.height
@@ -50,9 +85,13 @@ def game_over(screen_manager):
                 exit()
 
             if event.type == pygame.VIDEORESIZE:
+                # Update the screen dimensions
                 screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
-                show_game_over_screen(screen, event.w, event.h)  # Re-render with new size
-            
+                screen_manager.resize(event.w, event.h)
+
+                # Re-render the game over screen and update button positions
+                play_again_button, exit_button = show_game_over_screen(screen, event.w, event.h)
+
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
                 if play_again_button.collidepoint(mouse_pos):
