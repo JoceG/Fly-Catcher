@@ -74,12 +74,17 @@ class Fly:
         """
         Updates the fly's image based on its movement direction.
         """
-        if self.movement["left"]:
-            self.img = pygame.transform.scale(self.original_img_left, (self.width, self.height))
-            self.facing_left = True
-        elif self.movement["right"]:
+        if self.facing_left and self.movement["right"]:
             self.img = pygame.transform.scale(self.original_img_right, (self.width, self.height))
             self.facing_left = False
+        elif self.facing_left:
+            self.img = pygame.transform.scale(self.original_img_left, (self.width, self.height))
+
+        if not self.facing_left and self.movement["left"]:
+            self.img = pygame.transform.scale(self.original_img_left, (self.width, self.height))
+            self.facing_left = True
+        elif not self.facing_left:
+            self.img = pygame.transform.scale(self.original_img_right, (self.width, self.height))
 
     def check_edges(self, screen_width, screen_height):
         """
@@ -133,7 +138,7 @@ class Fly:
         self.check_edges(screen_width, screen_height)
         self.update_image()
 
-    def resize(self, width_scale, height_scale, game_state):
+    def resize(self, width_scale, height_scale):
         """
         Scales the fly's size by the given scale factors.
 
