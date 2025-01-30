@@ -14,8 +14,7 @@ def handle_resize(event, game_state, screen_manager, frog, flies):
         frog (Frog): The player's frog character.
         flies (list[Fly]): A list of flies currently in the game.
     """
-    new_width, new_height = event.w, event.h
-    screen_manager.resize(new_width, new_height)
+    screen_manager.resize(event.w, event.h)
     width_scale, height_scale = screen_manager.get_scaling_factors()
 
     # Update the frog's position and size relative to the new screen size
