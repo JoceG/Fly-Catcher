@@ -44,6 +44,7 @@ class Fly:
             "down": random.choice([True, False])
         }
         self.resolve_movement_conflicts(movement)
+        self.ensure_at_least_one_direction(movement, ["left", "right", "up", "down"])
         return movement
 
     def resolve_movement_conflicts(self, movement):
@@ -59,15 +60,18 @@ class Fly:
             if movement[dir1] and movement[dir2]:
                 movement[random.choice([dir1, dir2])] = False
 
-    def ensure_at_least_one_direction(self, directions):
+    def ensure_at_least_one_direction(self, movement, directions):
         """
-        Ensures that at least one movement direction is True.
+        Ensures that at least one movement direction is set to True in the given movement dictionary.
 
         Args:
-            directions (dict): A dictionary containing movement directions (`left`, `right`, `up`, `down`) as keys.
+            movement (dict): A dictionary containing movement directions (`left`, `right`, `up`, `down`) as keys,
+                              with boolean values indicating whether each direction is active.
+            directions (list): A list containing keys (`left`, `right`, `up`, `down`) that represent the movement directions 
+                               to check and activate if necessary.
         """
-        if not any(self.movement[dir] for dir in directions):
-            self.movement[random.choice(directions)] = True
+        if not any(movement[dir] for dir in directions):
+            movement[random.choice(directions)] = True
 
     def update_image(self):
         """
@@ -115,6 +119,7 @@ class Fly:
         for direction in possible_directions:
             self.movement[direction] = random.choice([True, False])
         self.resolve_movement_conflicts(self.movement)
+        self.ensure_at_least_one_direction(self.movement, ["left", "right", "up", "down"])
 
     def move(self, screen_width, screen_height):
         """
