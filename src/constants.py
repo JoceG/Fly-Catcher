@@ -4,6 +4,10 @@ import pygame
 FLY_SPAWN = pygame.USEREVENT + 1
 SPECIAL_FLY_SPAWN = pygame.USEREVENT + 2
 
+# Timer constants
+FLY_SPAWN_INTERVAL = 2000
+SPECIAL_FLY_SPAWN_INTERVAL = 8000
+
 # Load frog and fly images
 FROG = pygame.image.load('../assets/frog.png')
 FLY_LEFT = pygame.image.load('../assets/fly_left_facing.png')
