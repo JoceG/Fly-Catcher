@@ -3,7 +3,7 @@ import pygame
 from constants import FLY_LEFT, FLY_RIGHT, FLY_SPEED
 
 class Fly:
-    def __init__(self, screen_width, screen_height, width, height):
+    def __init__(self, screen_width, screen_height, width, height, img_left=FLY_LEFT, img_right=FLY_RIGHT):
         """
         Initialize the fly with default size, movement, and position.
 
@@ -12,18 +12,17 @@ class Fly:
             screen_height (int): Height of the screen the fly can move within.
             width (float, optional): Width of the fly. Defaults to 30.0.
             height (float, optional): Height of the fly. Defaults to 30.0.
-            fly_img_left (pygame.Surface, optional): Image of the fly facing left. Defaults to FLY_LEFT.
-            fly_img_right (pygame.Surface, optional): Image of the fly facing right. Defaults to FLY_RIGHT.
-            speed (int, optional): Speed at which the fly moves. Defaults to 2.
+            img_left (pygame.Surface, optional): Image of the fly facing left. Defaults to FLY_LEFT.
+            img_right (pygame.Surface, optional): Image of the fly facing right. Defaults to FLY_RIGHT.
         """
         self.width = width
         self.height = height
         self.speed = FLY_SPEED
 
-        self.original_img_left = FLY_LEFT
-        self.original_img_right = FLY_RIGHT
+        self.img_left = img_left
+        self.img_right = img_right
         self.facing_left = True
-        self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
+        self.img = pygame.transform.scale(self.img_left, (int(self.width), int(self.height)))
 
         self.x = random.randint(0, int(screen_width) - int(width))
         self.y = random.randint(0, int(screen_height) - int(height))
@@ -75,16 +74,16 @@ class Fly:
         Updates the fly's image based on its movement direction.
         """
         if self.facing_left and self.movement["right"]:
-            self.img = pygame.transform.scale(self.original_img_right, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_right, (self.width, self.height))
             self.facing_left = False
         elif self.facing_left:
-            self.img = pygame.transform.scale(self.original_img_left, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_left, (self.width, self.height))
 
         if not self.facing_left and self.movement["left"]:
-            self.img = pygame.transform.scale(self.original_img_left, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_left, (self.width, self.height))
             self.facing_left = True
         elif not self.facing_left:
-            self.img = pygame.transform.scale(self.original_img_right, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_right, (self.width, self.height))
 
     def check_edges(self, screen_width, screen_height):
         """

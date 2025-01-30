@@ -3,26 +3,20 @@ from constants import SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
 from fly import Fly
 
 class SpecialFly(Fly):
-    """
-    A special fly that disappears when it moves off the screen.
-    """
-
-    """
-    A special fly that disappears when it moves off the screen.
-
-        Args:
-            screen_width (int): Width of the screen the fly can move within.
-            screen_height (int): Height of the screen the fly can move within.
-            width (float, optional): Width of the special fly. Defaults to 30.0.
-            height (float, optional): Height of the special fly. Defaults to 30.0.
-            special_fly_img_left (pygame.Surface, optional): Image of the special fly facing left. Defaults to SPECIAL_FLY_LEFT.
-            special_fly_img_right (pygame.Surface, optional): Image of the special fly facing right. Defaults to SPECIAL_FLY_RIGHT.
-            speed (int, optional): Speed at which the special fly moves. Defaults to 2.
-    """
     def __init__(self, screen_width, screen_height, width, height):
         # Call the parent class (Fly) constructor to inherit its properties
-        super().__init__(screen_width, screen_height, width, height)
+        super().__init__(screen_width, screen_height, width, height, img_left=SPECIAL_FLY_LEFT, img_right=SPECIAL_FLY_RIGHT)
+        """
+        A special fly that disappears when it moves off the screen.
 
+            Args:
+                screen_width (int): Width of the screen the fly can move within.
+                screen_height (int): Height of the screen the fly can move within.
+                width (float, optional): Width of the special fly. Defaults to 30.0.
+                height (float, optional): Height of the special fly. Defaults to 30.0.
+                special_fly_img_left (pygame.Surface, optional): Image of the special fly facing left. Defaults to SPECIAL_FLY_LEFT.
+                special_fly_img_right (pygame.Surface, optional): Image of the special fly facing right. Defaults to SPECIAL_FLY_RIGHT.
+        """
         # Randomly spawn near the center of the screen
         self.x = random.randint(screen_width // 4, 3 * screen_width // 4)  # Random position from the first to the third quarter of the screen width
         self.y = random.randint(screen_height // 4, 3 * screen_height // 4)  # Random position from the first to the third quarter of the screen height
