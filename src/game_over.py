@@ -36,7 +36,7 @@ def show_game_over_screen(screen, screen_width, screen_height):
 
     return play_again_button, exit_button
 
-def game_over_loop(screen_manager):
+def game_over(screen_manager):
     screen = screen_manager.screen
     screen_width = screen_manager.width
     screen_height = screen_manager.height

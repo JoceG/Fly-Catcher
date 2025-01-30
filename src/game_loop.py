@@ -1,7 +1,7 @@
 import pygame
 from event_handler import handle_events
 from game_logic import update_frog_and_flies
-from game_over import game_over_loop
+from game_over import game_over
 from ui_renderer import draw_game_objects
 
 def is_time_up(start_time, countdown_time):
@@ -38,5 +38,5 @@ def create_game_loop(screen_manager, game_state):
 
         # End the game if time is up
         if is_time_up(start_time, game_state.countdown_time):
-            game_over_loop(screen_manager)
+            game_over(screen_manager)
             return
