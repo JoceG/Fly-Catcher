@@ -25,7 +25,7 @@ def handle_resize(event, game_state, screen_manager):
 
     # Update each fly's position and size relative to the new screen size
     for fly in game_state.flies:
-        fly.resize(width_scale, height_scale)
+        fly.resize(game_state.fly_width, game_state.fly_height)
         fly.reposition(width_scale, height_scale)
 
 def handle_key_event(event, frog, is_pressed):

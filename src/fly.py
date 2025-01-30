@@ -137,16 +137,16 @@ class Fly:
         self.check_edges(screen_width, screen_height)
         self.update_image()
 
-    def resize(self, width_scale, height_scale):
+    def resize(self, new_width, new_height):
         """
-        Scales the fly's size by the given scale factors.
+        Updates the fly's size using the new width and height.
 
         Args:
-            width_scale (float): Factor to scale the width.
-            height_scale (float): Factor to scale the height.
+            new_width (float): The new width of the fly.
+            new_height (float): The new height of the fly.
         """
-        self.width = int(self.width * width_scale)
-        self.height = int(self.height * height_scale)
+        self.width = new_width
+        self.height = new_height
         self.update_image()
         
     def reposition(self, width_scale, height_scale):
