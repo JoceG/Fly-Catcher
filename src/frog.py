@@ -9,10 +9,8 @@ class Frog:
         Args:
             x (float): The initial x-coordinate of the frog.
             y (float): The initial y-coordinate of the frog.
-            frog_img (pygame.Surface, optional): The image representing the frog. Defaults to FROG.
-            width (float, optional): The width of the frog. Defaults to 70.0.
-            height (float, optional): The height of the frog. Defaults to 60.0.
-            speed (float, optional): The movement speed of the frog. Defaults to 5.0.
+            width (float): The width of the frog. 
+            height (float): The height of the frog.
         """
         self.x = x
         self.y = y

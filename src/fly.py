@@ -10,8 +10,8 @@ class Fly:
         Args:
             screen_width (int): Width of the screen the fly can move within.
             screen_height (int): Height of the screen the fly can move within.
-            width (float, optional): Width of the fly. Defaults to 30.0.
-            height (float, optional): Height of the fly. Defaults to 30.0.
+            width (float): Width of the fly. 
+            height (float): Height of the fly.
             img_left (pygame.Surface, optional): Image of the fly facing left. Defaults to FLY_LEFT.
             img_right (pygame.Surface, optional): Image of the fly facing right. Defaults to FLY_RIGHT.
         """

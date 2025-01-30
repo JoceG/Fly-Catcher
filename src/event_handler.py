@@ -11,8 +11,6 @@ def handle_resize(event, game_state, screen_manager):
         event (pygame.event.Event): The resize event containing the new width and height.
         game_state (GameState): The current game state containing dynamic game variables.
         screen_manager (ScreenManager): Manages screen size and scaling factors.
-        frog (Frog): The player's frog character.
-        flies (list[Fly]): A list of flies currently in the game.
     """
     screen_manager.resize(event.w, event.h)
     width_scale, height_scale = screen_manager.get_scaling_factors()

@@ -12,8 +12,8 @@ class SpecialFly(Fly):
             Args:
                 screen_width (int): Width of the screen the fly can move within.
                 screen_height (int): Height of the screen the fly can move within.
-                width (float, optional): Width of the special fly. Defaults to 30.0.
-                height (float, optional): Height of the special fly. Defaults to 30.0.
+                width (float): Width of the special fly.
+                height (float): Height of the special fly.
                 special_fly_img_left (pygame.Surface, optional): Image of the special fly facing left. Defaults to SPECIAL_FLY_LEFT.
                 special_fly_img_right (pygame.Surface, optional): Image of the special fly facing right. Defaults to SPECIAL_FLY_RIGHT.
         """
