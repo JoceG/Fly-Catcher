@@ -4,6 +4,11 @@ class ScreenManager:
     def __init__(self, width=500, height=500, background_color=(243, 207, 198)):
         """
         Initializes the screen manager with default values.
+
+        Args:
+            width (int, optional): Initial width of the screen. Defaults to 500.
+            height (int, optional): Initial height of the screen. Defaults to 500.
+            background_color (tuple, optional): RGB color for the background. Defaults to (243, 207, 198).
         """
         self.width = width
         self.height = height
@@ -15,7 +20,8 @@ class ScreenManager:
 
     def initialize_screen(self):
         """
-        Sets up the Pygame screen.
+        Sets up the Pygame screen with the specified dimensions and background color.
+        The screen is resizable.
         """
         pygame.init()
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
@@ -24,34 +30,29 @@ class ScreenManager:
 
     def resize(self, new_width, new_height):
         """
-        Resizes the screen when the screen is resized.
+        Resizes the screen and updates previous dimensions.
 
         Args:
             new_width (int): The new width of the screen.
             new_height (int): The new height of the screen.
         """
-        # Update the previous dimensions
-        self.previous_width = self.width
-        self.previous_height = self.height
-
-        # Update the current dimensions
-        self.width = new_width
-        self.height = new_height
-
-        # Resize the Pygame screen
+        self.previous_width, self.previous_height = self.width, self.height
+        self.width, self.height = new_width, new_height
         self.screen = pygame.display.set_mode((new_width, new_height), pygame.RESIZABLE)
 
     def clear(self):
         """
-        Clears the screen with the background color.
+        Clears the screen by filling it with the background color.
         """
         if self.screen:
             self.screen.fill(self.background_color)
 
     def get_scaling_factors(self):
         """
-        Returns a tuple containing scaling factors for width and height.
+        Calculates the scaling factors for width and height based on the previous screen size.
+
+        Returns:
+            tuple: A tuple (width_scale, height_scale) where both values are floats representing 
+                   the scaling factors for width and height.
         """
-        width_scale = self.width / self.previous_width
-        height_scale = self.height / self.previous_height
-        return width_scale, height_scale
+        return self.width / self.previous_width, self.height / self.previous_height
