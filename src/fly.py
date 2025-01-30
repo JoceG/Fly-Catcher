@@ -1,10 +1,9 @@
 import random
 import pygame
-from constants import FLY_LEFT, FLY_RIGHT
+from constants import FLY_LEFT, FLY_RIGHT, FLY_SPEED
 
 class Fly:
-    def __init__(self, screen_width, screen_height, width=30.0, height=30.0,
-                 fly_img_left=FLY_LEFT, fly_img_right=FLY_RIGHT, speed=2):
+    def __init__(self, screen_width, screen_height, width, height):
         """
         Initialize the fly with default size, movement, and position.
 
@@ -19,10 +18,10 @@ class Fly:
         """
         self.width = width
         self.height = height
-        self.speed = speed
+        self.speed = FLY_SPEED
 
-        self.original_img_left = fly_img_left
-        self.original_img_right = fly_img_right
+        self.original_img_left = FLY_LEFT
+        self.original_img_right = FLY_RIGHT
         self.facing_left = True
         self.img = pygame.transform.scale(self.original_img_left, (int(self.width), int(self.height)))
 
@@ -134,7 +133,7 @@ class Fly:
         self.check_edges(screen_width, screen_height)
         self.update_image()
 
-    def resize(self, width_scale, height_scale):
+    def resize(self, width_scale, height_scale, game_state):
         """
         Scales the fly's size by the given scale factors.
 
@@ -145,7 +144,7 @@ class Fly:
         self.width = int(self.width * width_scale)
         self.height = int(self.height * height_scale)
         self.update_image()
-
+        
     def reposition(self, width_scale, height_scale):
         """
         Adjusts the fly's position after resizing to maintain relative placement.

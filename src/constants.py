@@ -16,9 +16,7 @@ SPECIAL_FLY_LEFT = pygame.image.load('../assets/special_fly_left_facing.png')
 SPECIAL_FLY_RIGHT = pygame.image.load('../assets/special_fly_right_facing.png')
 
 # Fixed game configurations
-GAME_DURATION = 120  # Game time in seconds (2 minutes)
+GAME_DURATION = 120  # Game duration in seconds
 INITIAL_FLY_COUNT = 5
-FLY_WIDTH = 30.0
-FLY_HEIGHT = 30.0
-
-
+FROG_SPEED = 5.0
+FLY_SPEED = 2.0

@@ -19,12 +19,9 @@ class SpecialFly(Fly):
             special_fly_img_right (pygame.Surface, optional): Image of the special fly facing right. Defaults to SPECIAL_FLY_RIGHT.
             speed (int, optional): Speed at which the special fly moves. Defaults to 2.
     """
-    def __init__(self, screen_width, screen_height, width=30.0, height=30.0,
-                 special_fly_img_left=SPECIAL_FLY_LEFT,
-                 special_fly_img_right=SPECIAL_FLY_RIGHT, speed=2):
+    def __init__(self, screen_width, screen_height, width, height):
         # Call the parent class (Fly) constructor to inherit its properties
-        super().__init__(screen_width, screen_height, width, height,
-                         special_fly_img_left, special_fly_img_right, speed)
+        super().__init__(screen_width, screen_height, width, height)
 
         # Randomly spawn near the center of the screen
         self.x = random.randint(screen_width // 4, 3 * screen_width // 4)  # Random position from the first to the third quarter of the screen width

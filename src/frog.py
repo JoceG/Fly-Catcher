@@ -1,8 +1,8 @@
 import pygame
-from constants import FROG
+from constants import FROG, FROG_SPEED
 
 class Frog:
-    def __init__(self, x, y, frog_img=FROG, width=70.0, height=60.0, speed=5.0):
+    def __init__(self, x, y, width, height):
         """
         Initializes the frog with position, size, speed, and movement states.
 
@@ -18,7 +18,7 @@ class Frog:
         self.y = y
         self.width = width
         self.height = height
-        self.speed = speed
+        self.speed = FROG_SPEED
         self.movement = {
             'left': False,
             'right': False,
@@ -26,7 +26,7 @@ class Frog:
             'up': False
         }
 
-        self.original_img = frog_img
+        self.original_img = FROG
         self.img = pygame.transform.scale(self.original_img, (int(self.width), int(self.height)))
 
     def move(self, screen_width, screen_height):
