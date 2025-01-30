@@ -12,8 +12,8 @@ def check_collision(frog, fly):
     Returns:
         bool: True if the frog and fly are colliding, otherwise False.
     """
-    frog_rect = pygame.Rect(frog.x, frog.y, frog.width, frog.height)
-    fly_rect = pygame.Rect(fly.x, fly.y, fly.width, fly.height)
+    frog_rect = pygame.Rect(frog.x, frog.y, int(frog.width), int(frog.height))
+    fly_rect = pygame.Rect(fly.x, fly.y, int(fly.width), int(fly.height))
     return frog_rect.colliderect(fly_rect)
 
 def update_frog_and_flies(game_state, screen_width, screen_height):

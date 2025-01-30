@@ -77,4 +77,4 @@ class Frog:
         Args:
             screen (pygame.Surface): The surface to draw the frog on.
         """
-        screen.blit(self.img, (int(self.x), int(self.y)))
+        screen.blit(self.img, (self.x, self.y))

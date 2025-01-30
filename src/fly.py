@@ -74,16 +74,16 @@ class Fly:
         Updates the fly's image based on its movement direction.
         """
         if self.facing_left and self.movement["right"]:
-            self.img = pygame.transform.scale(self.img_right, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_right, (int(self.width), int(self.height)))
             self.facing_left = False
         elif self.facing_left:
-            self.img = pygame.transform.scale(self.img_left, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_left, (int(self.width), int(self.height)))
 
         if not self.facing_left and self.movement["left"]:
-            self.img = pygame.transform.scale(self.img_left, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_left, (int(self.width), int(self.height)))
             self.facing_left = True
         elif not self.facing_left:
-            self.img = pygame.transform.scale(self.img_right, (self.width, self.height))
+            self.img = pygame.transform.scale(self.img_right, (int(self.width), int(self.height)))
 
     def check_edges(self, screen_width, screen_height):
         """
@@ -157,8 +157,8 @@ class Fly:
             width_scale (float): Factor to scale the x position.
             height_scale (float): Factor to scale the y position.
         """
-        self.x = int(self.x * width_scale)
-        self.y = int(self.y * height_scale)
+        self.x = self.x * width_scale
+        self.y = self.y * height_scale
 
     def draw(self, screen):
         """
