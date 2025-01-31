@@ -18,15 +18,15 @@ def fly(screen_manager):
     pygame.init()  # Ensure pygame is initialized in the test environment
     return SpecialFly(screen_manager.width, screen_manager.height, width=30.0, height=30.0)
 
-def test_initialization(fly):
+def test_initialization(fly, screen_manager):
     """
     Test that the Fly initializes with correct attributes.
     """
     assert fly.width == 30
     assert fly.height == 30
     assert fly.speed == 2
-    assert 0 <= fly.x <= 800 - int(fly.width)
-    assert 0 <= fly.y <= 500 - int(fly.height)
+    assert 0 <= fly.x <= screen_manager.width - int(fly.width)
+    assert 0 <= fly.y <= screen_manager.height - int(fly.height)
 
 def test_set_valid_movement(fly):
     """
@@ -35,6 +35,25 @@ def test_set_valid_movement(fly):
     assert not (fly.movement["left"] and fly.movement["right"])
     assert not (fly.movement["up"] and fly.movement["down"])
     assert any([fly.movement["left"], fly.movement["right"], fly.movement["up"], fly.movement["down"]])
+
+def test_adjust_movement(fly, screen_manager):
+    """
+    Tests the adjust_movement method of the SpecialFly class. It ensures that the fly
+    correctly changes its movement direction when it is near the center of the screen.
+    """
+    # Test when the fly is in the left half and moving left
+    fly.x = screen_manager.width // 4  # Position near the left half
+    fly.movement["left"] = True
+    fly.adjust_movement(screen_manager.width, screen_manager.height)
+    assert fly.movement["left"] is False
+    assert fly.movement["right"] is True
+    
+    # Test when the fly is in the right half and moving right
+    fly.x = 3 * screen_manager.width // 4  # Position near the right half
+    fly.movement["right"] = True
+    fly.adjust_movement(screen_manager.width, screen_manager.height)
+    assert fly.movement["right"] is False
+    assert fly.movement["left"] is True
 
 def test_move(fly, screen_manager):
     """
