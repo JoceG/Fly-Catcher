@@ -33,8 +33,11 @@ def update_frog_and_flies(game_state, screen_width, screen_height):
     for fly in game_state.flies[:]:
         if check_collision(game_state.frog, fly):
             game_state.flies.remove(fly)
-            game_state.score += 1
-            game_state.countdown_time += 25 if isinstance(fly, SpecialFly) else 5
+            
+            if isinstance(fly, SpecialFly):   
+                game_state.countdown_time += 5
+            else:
+                game_state.score += 1
 
             # Store the position and timestamp of the score popup
             game_state.score_popups.append({

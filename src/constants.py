@@ -28,3 +28,4 @@ BACKGROUND_COLOR = (243, 207, 198)  # Background color of the screen
 BLACK_COLOR = (0, 0, 0)  # Color for score and time text
 GOLD_COLOR = (255, 223, 0)  # Color for special popups
 GRAY_COLOR = (169, 169, 169)  # Color for regular popups
+
