@@ -1,3 +1,4 @@
+import pygame
 import random
 from constants import SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
 from fly import Fly
@@ -44,11 +45,13 @@ class SpecialFly(Fly):
         if fly_center_x < screen_center_x and self.movement["left"]:
             self.movement["left"] = False
             self.movement["right"] = True
+            self.img = pygame.transform.scale(self.img_right, (int(self.width), int(self.height)))
 
         # If the fly is in the right half and moving right, change direction to left
         if fly_center_x > screen_center_x and self.movement["right"]:
             self.movement["right"] = False
             self.movement["left"] = True
+            self.img = pygame.transform.scale(self.img_left, (int(self.width), int(self.height)))
 
         # If the fly is in the top half and moving up, change direction to down
         if fly_center_y < screen_center_y and self.movement["up"]:
