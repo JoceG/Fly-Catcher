@@ -1,15 +1,22 @@
 import pygame
 import pytest
-from constants import FLY_LEFT, FLY_RIGHT
 from fly import Fly
+from screen_manager import ScreenManager
 
 @pytest.fixture
-def fly():
+def screen_manager():
+    """
+    Fixture to create a ScreenManager instance.
+    """
+    return ScreenManager()
+
+@pytest.fixture
+def fly(screen_manager):
     """
     Fixture to create a Fly instance with default size and random position.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
-    return Fly(screen_width=500, screen_height=500, fly_img_left=FLY_LEFT, fly_img_right=FLY_RIGHT)
+    return Fly(screen_manager.width, screen_manager.height, width=30.0, height=30.0)
 
 def test_initialization(fly):
     """
@@ -18,8 +25,8 @@ def test_initialization(fly):
     assert fly.width == 30
     assert fly.height == 30
     assert fly.speed == 2
-    assert 0 <= fly.x <= 500 - fly.width
-    assert 0 <= fly.y <= 500 - fly.height
+    assert 0 <= fly.x <= 800 - int(fly.width)
+    assert 0 <= fly.y <= 600 - int(fly.height)
 
 def test_set_valid_movement(fly):
     """
@@ -29,7 +36,7 @@ def test_set_valid_movement(fly):
     assert not (fly.movement["up"] and fly.movement["down"])
     assert any([fly.movement["left"], fly.movement["right"], fly.movement["up"], fly.movement["down"]])
     
-def test_move(fly):
+def test_move(fly, screen_manager):
     """
     Test that the Fly moves correctly based on the movement directions.
     """
@@ -41,7 +48,7 @@ def test_move(fly):
     fly.movement["up"] = True
     fly.movement["down"] = False
     
-    fly.move()
+    fly.move(screen_manager.width, screen_manager.height)
     
     assert fly.x == 252
     assert fly.y == 248
@@ -52,11 +59,9 @@ def test_resize(fly):
     """
     initial_width = fly.width
     initial_height = fly.height
-    width_scale = 2.0
-    height_scale = 1.5
-    fly.resize(width_scale, height_scale)
-    assert fly.width == initial_width * width_scale
-    assert fly.height == initial_height * height_scale
+    fly.resize(initial_width * 2.0, initial_height * 1.5)
+    assert fly.width == 60
+    assert fly.height == 45
 
 def test_reposition(fly):
     """
@@ -76,11 +81,13 @@ def test_resize_and_reposition(fly):
     """
     initial_x = fly.x
     initial_y = fly.y
+    initial_width = fly.width
+    initial_height = fly.height
     width_scale = 2.0
     height_scale = 1.5
 
     # Resize and reposition
-    fly.resize(width_scale, height_scale)
+    fly.resize(initial_width * 2.0, initial_height * 1.5)
     fly.reposition(width_scale, height_scale)
 
     # Validate changes
