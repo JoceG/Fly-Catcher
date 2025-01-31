@@ -13,7 +13,7 @@ def screen_manager():
 @pytest.fixture
 def frog():
     """
-    Fixture to create a Frog instance with default values.
+    Fixture to create a Frog instance.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
     return Frog(x=400.0, y=250.0, width=70.0, height=60.0)

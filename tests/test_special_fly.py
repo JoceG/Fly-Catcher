@@ -13,7 +13,7 @@ def screen_manager():
 @pytest.fixture
 def fly(screen_manager):
     """
-    Fixture to create a SpecialFly instance with default size and random position.
+    Fixture to create a SpecialFly instance with random position.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
     return SpecialFly(screen_manager.width, screen_manager.height, width=30.0, height=30.0)
