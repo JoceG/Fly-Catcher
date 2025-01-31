@@ -25,12 +25,12 @@ class GameState:
         self.countdown_time = GAME_DURATION
         self.score = 0
         self.score_popups = []
-        self.fly_width = screen_width / 20
-        self.fly_height = screen_width / 20
+        self.fly_width = screen_width / 25
+        self.fly_height = screen_width / 25
 
         # Reset game entities
         self.frog = Frog(screen_width / 2, screen_height / 2,
-                         screen_width / 10, screen_height / 10)
+                         screen_width / 10, screen_width / 12)
         self.flies = [Fly(screen_width, screen_height, self.fly_width,
                           self.fly_height) for _ in range(INITIAL_FLY_COUNT)]
 
