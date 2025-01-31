@@ -12,7 +12,7 @@ def draw_flies(game_state, screen):
     for fly in game_state.flies:
         fly.draw(screen)
 
-def draw_popups(score_popups, screen):
+def draw_popups(score_popups, screen, screen_height):
     """
     Draws score popups on the screen and removes expired ones.
 
@@ -24,7 +24,7 @@ def draw_popups(score_popups, screen):
         screen (pygame.Surface): The game screen where the popups will be drawn.
     """
     current_time = pygame.time.get_ticks()
-    font = pygame.font.Font(None, 30)
+    font = pygame.font.Font(None, int(screen_height * 0.05))
     
     active_popups = []  # Collect active popups to update the list for the next frame
 
@@ -37,7 +37,7 @@ def draw_popups(score_popups, screen):
 
     score_popups[:] = active_popups  # Update list with active popups only
 
-def draw_score_and_time(screen, score, time_remaining):
+def draw_score_and_time(screen, screen_height, score, time_remaining):
     """
     Draws the score and remaining time on the screen.
 
@@ -46,7 +46,8 @@ def draw_score_and_time(screen, score, time_remaining):
         score (int): The current score of the player.
         time_remaining (int): The remaining time in seconds.
     """
-    font = pygame.font.SysFont("Arial", 24)
+    font_size = int(screen_height * 0.05)
+    font = pygame.font.SysFont("Arial", font_size)
     score_x_position = 10
     minutes = time_remaining // 60
     seconds = time_remaining % 60
@@ -63,8 +64,9 @@ def draw_score_and_time(screen, score, time_remaining):
     # Calculate x-coordinate to center the time text under the score
     time_x_position = score_x_position + (score_width - time_width) // 2
 
-    # Display the time below the score
-    screen.blit(time_text, (time_x_position, 50))  # Position the time 50px below the score
+    # Position the time based on the font size (to keep spacing proportional)
+    vertical_spacing = int(font_size * 1.2)  # 1.2x font size as spacing
+    screen.blit(time_text, (time_x_position, int(screen_height * 0.02) + vertical_spacing)) 
 
 def draw_game_objects(game_state, screen_manager, start_time):
     """
@@ -80,11 +82,11 @@ def draw_game_objects(game_state, screen_manager, start_time):
     # Draw individual game elements
     game_state.frog.draw(screen_manager.screen)  # Draw frog
     draw_flies(game_state, screen_manager.screen)  # Draw flies
-    draw_popups(game_state.score_popups, screen_manager.screen)  # Draw score popups (+5s and +25s)
+    draw_popups(game_state.score_popups, screen_manager.screen, screen_manager.height)  # Draw score popups (+5s and +25s)
 
     # Calculate the remaining time
     elapsed_time = (pygame.time.get_ticks() - start_time) // 1000
     remaining_time = max(0, game_state.countdown_time - elapsed_time)
 
     # Draw score and time
-    draw_score_and_time(screen_manager.screen, game_state.score, remaining_time)
+    draw_score_and_time(screen_manager.screen, screen_manager.height, game_state.score, remaining_time)
