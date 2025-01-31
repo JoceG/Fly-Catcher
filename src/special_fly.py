@@ -1,3 +1,4 @@
+import pygame
 import random
 from constants import SPECIAL_FLY_LEFT, SPECIAL_FLY_RIGHT
 from fly import Fly
@@ -26,32 +27,42 @@ class SpecialFly(Fly):
 
     def adjust_movement(self, screen_width, screen_height):
         """
-        Adjusts the movement direction of the fly if it's too close to the screen edge.
+        Redirects the fly's movement if it's too close to one half of the screen  
+        and moving further in that direction. This helps ensure flies stay within  
+        a balanced play area, giving the player enough time to react and catch them.
 
         Args:
-            screen_width (int): The width of the screen, used to check if the fly is too close to the right or left edge.
-            screen_height (int): The height of the screen, used to check if the fly is too close to the top or bottom edge.
+            screen_width (int): The width of the screen, used to determine positioning.
+            screen_height (int): The height of the screen, used to determine positioning.
         """
-        # If the fly is near the left edge and moving left, change direction to right
-        if self.x <= 0 and self.movement["left"]:
+        fly_center_x = self.x + self.width / 2
+        fly_center_y = self.y + self.height / 2
+
+        screen_center_x = screen_width / 2
+        screen_center_y = screen_height / 2
+
+        # If the fly is in the left half and moving left, change direction to right
+        if fly_center_x < screen_center_x and self.movement["left"]:
             self.movement["left"] = False
             self.movement["right"] = True
+            self.img = pygame.transform.scale(self.img_right, (int(self.width), int(self.height)))
 
-        # If the fly is near the right edge and moving right, change direction to left
-        if self.x + self.width >= screen_width and self.movement["right"]:
+        # If the fly is in the right half and moving right, change direction to left
+        if fly_center_x > screen_center_x and self.movement["right"]:
             self.movement["right"] = False
             self.movement["left"] = True
+            self.img = pygame.transform.scale(self.img_left, (int(self.width), int(self.height)))
 
-        # If the fly is near the top edge and moving up, change direction to down
-        if self.y <= 0 and self.movement["up"]:
+        # If the fly is in the top half and moving up, change direction to down
+        if fly_center_y < screen_center_y and self.movement["up"]:
             self.movement["up"] = False
             self.movement["down"] = True
 
-        # If the fly is near the bottom edge and moving down, change direction to up
-        if self.y + self.height >= screen_height and self.movement["down"]:
+        # If the fly is in the bottom half and moving down, change direction to up
+        if fly_center_y > screen_center_y and self.movement["down"]:
             self.movement["down"] = False
             self.movement["up"] = True
-    
+
     def move(self, screen_width, screen_height):
         """
         Moves the special fly and returns a boolean indicating whether the fly is still on the screen.

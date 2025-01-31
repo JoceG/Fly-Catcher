@@ -31,7 +31,7 @@ def draw_popups(score_popups, screen):
     for popup in score_popups:
         if current_time - popup["time"] < 1000:  # Show for 1 second
             color = GOLD_COLOR if popup["special"] else GRAY_COLOR
-            text = font.render("+25s" if popup["special"] else "+5s", True, color)
+            text = font.render("+5s" if popup["special"] else "+1", True, color)
             screen.blit(text, (popup["pos"][0], popup["pos"][1] - 20))
             active_popups.append(popup)  # Keep active popups
 
