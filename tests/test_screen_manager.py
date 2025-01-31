@@ -6,7 +6,7 @@ def screen_manager():
     """
     Fixture to create a ScreenManager instance.
     """
-    return ScreenManager(width=800, height=600, background_color=(255, 255, 255))
+    return ScreenManager()
 
 def test_initialization(screen_manager):
     """
@@ -14,7 +14,7 @@ def test_initialization(screen_manager):
     """
     assert screen_manager.width == 800
     assert screen_manager.height == 600
-    assert screen_manager.background_color == (255, 255, 255)
+    assert screen_manager.background_color == (243, 207, 198)
     assert screen_manager.screen is not None
 
 def test_resize(screen_manager):
@@ -32,7 +32,7 @@ def test_screen_clear(screen_manager):
     Test that the screen clears with the correct color.
     """
     screen_manager.clear()
-    assert screen_manager.screen.get_at((0, 0)) == (255, 255, 255, 255)
+    assert screen_manager.screen.get_at((0, 0))[:3] == (243, 207, 198)
 
 def test_scaling_factors(screen_manager):
     """

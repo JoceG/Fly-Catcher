@@ -8,7 +8,7 @@ def screen_manager():
     """
     Fixture to create a ScreenManager instance.
     """
-    return ScreenManager(width=800, height=600, background_color=(255, 255, 255))
+    return ScreenManager()
 
 @pytest.fixture
 def frog():
@@ -16,18 +16,17 @@ def frog():
     Fixture to create a Frog instance with default values.
     """
     pygame.init()  # Ensure pygame is initialized in the test environment
-    frog_img = pygame.image.load('frog.png') # Load the frog image
-    return Frog(x=250.0, y=250.0, frog_img=frog_img)
+    return Frog(x=400.0, y=250.0, width=70.0, height=60.0)
 
 def test_initialization(frog):
     """
     Test that the Frog initializes with correct attributes.
     """
-    assert frog.x == 250.0
-    assert frog.y == 250.0
-    assert frog.width == 70.0
-    assert frog.height == 60.0
-    assert frog.speed == 5.0
+    assert frog.x == 400
+    assert frog.y == 250
+    assert frog.width == 70
+    assert frog.height == 60
+    assert frog.speed == 5
     assert frog.movement == {
         'left': False,
         'right': False,
@@ -41,7 +40,7 @@ def test_move_left(frog, screen_manager):
     """
     initial_x = frog.x
     frog.movement['left'] = True
-    frog.move(screen_manager)
+    frog.move(screen_manager.width, screen_manager.height)
     assert frog.x == initial_x - frog.speed
 
 def test_move_right(frog, screen_manager):
@@ -50,7 +49,7 @@ def test_move_right(frog, screen_manager):
     """
     initial_x = frog.x
     frog.movement['right'] = True
-    frog.move(screen_manager)
+    frog.move(screen_manager.width, screen_manager.height)
     assert frog.x == initial_x + frog.speed
 
 def test_move_down(frog, screen_manager):
@@ -59,7 +58,7 @@ def test_move_down(frog, screen_manager):
     """
     initial_y = frog.y
     frog.movement['down'] = True
-    frog.move(screen_manager)
+    frog.move(screen_manager.width, screen_manager.height)
     assert frog.y == initial_y + frog.speed
 
 def test_move_up(frog, screen_manager):
@@ -68,7 +67,7 @@ def test_move_up(frog, screen_manager):
     """
     initial_y = frog.y
     frog.movement['up'] = True
-    frog.move(screen_manager)
+    frog.move(screen_manager.width, screen_manager.height)
     assert frog.y == initial_y - frog.speed
 
 def test_resize(frog):
