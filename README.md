@@ -21,14 +21,35 @@ To set up the game on your local machine:
 
 4. Run the game:
    ```bash
-   main.py
+   python main.py
+
+## Running Tests
+To run the tests for Fly Catcher:
+
+1. Install pytest if you haven’t already:
+   ```bash
+   pip install pytest
+2. Navigate to the tests folder and run the tests:
+   ```bash
+   cd Fly-Catcher/tests
+   ```
+   ```bash
+   pytest
+
+## Usage
+- Use the arrow keys (up, down, left, right) to move the frog.
+- Catch as many flies as you can to increase your score.
+- Regular flies add 1 point to your score.
+- Gold flies (special flies) add 5 seconds to the timer.
+- The game lasts for 2 minutes. Once the timer runs out, the game is over.
 
 ## Future Work
 Here are some planned features and improvements for Fly Catcher:
 
+- **Error Handling**: Implement error handling for edge cases or unexpected inputs.
+- **Unit Tests**: Expand unit testing coverage to improve robustness.
 - **Obstacle Mechanics**: Introduce obstacles that the frog needs to avoid while catching flies.
-- **Difficulty Levels**: Add an option to choose easy, medium, or hard gameplay modes.
-- **High Score Tracking**: Keep a record of the top scores locally or online.
-- **Multiplayer Mode**: Enable two players to compete to catch the most flies.
-- **Sound Effects**: Include sound effects for catching flies and background music.
-
+- **Difficulty Levels**: Add different difficulty levels (easy, medium, hard) to enhance gameplay.
+- **High Score Tracking**: Add a system to track and store high scores locally or online.
+- **Multiplayer Mode**: Allow two players to compete to catch the most flies.
+- **Sound Effects**: Incorporate sound effects for catching flies and background music.
